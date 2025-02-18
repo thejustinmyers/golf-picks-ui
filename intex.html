@@ -12,7 +12,10 @@
     <div class="logo">
         <img src="logo.png" alt="logo" class="logo">
     </div>
-    <button id="shuffle-draft-order-button">Shuffle Draft Order</button>
+    <div class="shuffle_and_save_buttons">
+        <button id="shuffle-draft-order-button">Shuffle Draft Order</button>
+        <button id="save-csv-button">Save Draft to CSV</button>
+    </div>
     <!-- Draft Table -->
     <div class="draft" style="overflow-x:auto;">
         <table id="draft-table">
@@ -100,8 +103,6 @@
             <!-- More rows as needed -->
         </table>
     </div>
-    <!-- Add this button below your draft table -->
-    <button id="save-csv-button">Save Draft to CSV</button>
     <!-- Tournament Input and Submit Button -->
     <div class="tournament-input">
         <select name="select-tournament" id="tournament-selection">

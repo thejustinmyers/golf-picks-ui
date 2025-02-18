@@ -13,7 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // Fetch the player names and odds from the API based on tournament input
     document.getElementById("fetch-odds-button").addEventListener("click", () => {
         const tournamentName = document.getElementById("tournament-selection").value;
-        alert(tournamentName)
 
         if (!tournamentName) {
             alert("Please enter a tournament name.");
