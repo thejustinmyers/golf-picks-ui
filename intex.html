@@ -1,126 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Draft Table</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Golf Picks</title>
+    <link rel="stylesheet" href="styles/homepage.css">
 </head>
-
 <body>
-    <div class="logo">
-        <img src="logo.png" alt="logo" class="logo">
+    <div class="container">
+        <h1>GolfPicks</h1>
+        <div class="buttons">
+            <a href="pages/draft.html" class="btn">Go to Draft</a>
+            <a href="pages/leaderboard.html" class="btn">View Leaderboard</a>
+        </div>
     </div>
-    <div class="shuffle_and_save_buttons">
-        <button id="shuffle-draft-order-button">Shuffle Draft Order</button>
-        <button id="save-csv-button">Save Draft to CSV</button>
-    </div>
-    <!-- Draft Table -->
-    <div class="draft" style="overflow-x:auto;">
-        <table id="draft-table">
-            <thead>
-                <tr>
-                    <th contenteditable="true">Justin</th>
-                    <th contenteditable="true">Hen</th>
-                    <th contenteditable="true">Poz</th>
-                    <th contenteditable="true">Connor</th>
-                    <th contenteditable="true">Kev</th>
-                    <th contenteditable="true">Fran</th>
-                    <th contenteditable="true">Vitale</th>
-                    <th contenteditable="true">Reed</th>
-                    <th contenteditable="true">Guar</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                </tr>
-                <tr>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                </tr>
-                <tr>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                </tr>
-                <tr>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                </tr>
-                <tr>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                </tr>
-                <tr>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                </tr>
-            </tbody>
-            <!-- More rows as needed -->
-        </table>
-    </div>
-    <!-- Tournament Input and Submit Button -->
-    <div class="tournament-input">
-        <select name="select-tournament" id="tournament-selection">
-            <option value="us-masters">Masters Tournament</option>
-            <option value="us-open">U.S. Open</option>
-            <option value="the-open-championship">The Open Championship</option>
-            <option value="uspga-championship">PGA Championship</option>
-            <option value="ryder-cup">Ryder Cup</option>
-        </select>
-        <button id="fetch-odds-button">Fetch Odds</button>
-    </div>
-    <div class="list" style="overflow-x:auto;">
-        <table id="odds-table">
-            <!-- Players and Odds will be populated here -->
-        </table>
-    </div>
-
-    <script src="script.js"></script>
 </body>
-
 </html>
