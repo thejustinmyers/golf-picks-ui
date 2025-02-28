@@ -63,15 +63,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (emptyCell) {
             emptyCell.textContent = playerName;
+
+            // Grey out the player in the odds table
+            const oddsTable = document.getElementById('odds-table');
+            const rows = oddsTable.querySelectorAll('tbody tr');
+
+            rows.forEach(row => {
+                const nameCell = row.querySelector('td:first-child');
+                if (nameCell && nameCell.textContent === playerName) {
+                    row.style.opacity = "0.5"; // Grey out effect
+                    row.style.pointerEvents = "none"; // Disable clicking
+                }
+            });
         } else {
             alert("No empty slots available in the draft table.");
         }
     }
 
+
     // Save draft table as CSV
     document.getElementById("save-csv-button").addEventListener("click", () => {
         const rows = Array.from(draftTable.querySelectorAll('tr'));
-        const csvData = rows.map(row => 
+        const csvData = rows.map(row =>
             Array.from(row.querySelectorAll('th, td'))
                 .map(cell => `"${cell.textContent.replace(/"/g, '""')}"`)
                 .join(',')
