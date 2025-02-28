@@ -3,14 +3,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const draftCells = draftTable.querySelectorAll('td[contenteditable="true"]');
     const tournamentSelect = document.getElementById("tournament-selection");
 
-    // Function to format tournament names
     function formatTournamentName(tournamentId) {
         return tournamentId
-            .replace(/-/g, " ") // Replace hyphens with spaces
-            // .replace(/\b\w/g, char => char.toUpperCase()); // Capitalize first letter of each word
+            .replace(/-/g, " ")
+            .replace(/\b\w/g, char => char.toUpperCase());
     }
 
-    // Fetch available tournaments and populate the dropdown
     async function loadTournaments() {
         try {
             const response = await fetch("http://0.0.0.0:8000/tournaments");
@@ -18,11 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 throw new Error("Failed to fetch tournaments");
             }
             const tournaments = await response.json();
-
-            // Clear existing options
             tournamentSelect.innerHTML = "";
-
-            // Populate dropdown with API response
             tournaments.forEach(tournamentId => {
                 const option = document.createElement("option");
                 option.value = tournamentId;
@@ -34,7 +28,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    await loadTournaments(); // Load tournaments on page load
+    await loadTournaments();
 
     // Only allow letters and spaces in contenteditable cells
     draftCells.forEach(cell => {
@@ -115,20 +109,55 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // Save draft table as CSV
-    document.getElementById("save-csv-button").addEventListener("click", () => {
+    document.getElementById("save-csv-button").addEventListener("click", async () => {
         const rows = Array.from(draftTable.querySelectorAll("tr"));
         const csvData = rows.map(row =>
             Array.from(row.querySelectorAll("th, td"))
                 .map(cell => `"${cell.textContent.replace(/"/g, '""')}"`)
                 .join(",")
         );
-
         const csvString = csvData.join("\n");
         const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
         link.download = "draft_table.csv";
         link.click();
+
+        const tournamentName = tournamentSelect.value;
+        if (!tournamentName) {
+            alert("Please select a tournament.");
+            return;
+        }
+
+        const headers = Array.from(draftTable.querySelectorAll("thead th"))
+            .map(th => th.textContent.trim());
+        const draftData = {};
+        headers.forEach(header => draftData[header] = []);
+
+        draftTable.querySelectorAll("tbody tr").forEach(row => {
+            Array.from(row.querySelectorAll("td")).forEach((cell, index) => {
+                if (cell.textContent.trim()) {
+                    draftData[headers[index]].push(cell.textContent.trim());
+                }
+            });
+        });
+
+        try {
+            const response = await fetch(`http://0.0.0.0:8000/draft/${tournamentName}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(draftData)
+            });
+            if (!response.ok) {
+                throw new Error("Failed to save draft to API");
+            }
+            alert("Draft saved successfully!");
+        } catch (error) {
+            console.error("Error saving draft to API:", error);
+            alert("Failed to save draft. Please try again.");
+        }
     });
 
     // Shuffle draft order (headers only)
