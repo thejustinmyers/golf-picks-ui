@@ -1,16 +1,15 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const draftTable = document.getElementById("draft-table");
+    const draftCells = draftTable.querySelectorAll('td[contenteditable="true"]');
 
-    // Get all the contenteditable cells in the draft table
-    const draftCells = document.querySelectorAll('#draft-table td[contenteditable="true"]');
-
+    // Only allow letters and spaces in contenteditable cells
     draftCells.forEach(cell => {
         cell.addEventListener('input', function () {
-            // Allow only letters and spaces
             this.textContent = this.textContent.replace(/[^a-zA-Z\s]/g, '');
         });
     });
 
-    // Fetch the player names and odds from the API based on tournament input
+    // Fetch odds and populate table
     document.getElementById("fetch-odds-button").addEventListener("click", () => {
         const tournamentName = document.getElementById("tournament-selection").value;
 
@@ -19,78 +18,66 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // Fetch odds from the API based on the tournament name
         fetch(`http://0.0.0.0:8000/odds/${tournamentName}`)
             .then(response => response.json())
             .then(data => {
-                // Assuming the response is like: {"Scottie Scheffler": "+500", "Rory McIlroy": "+1000", "Xander Schauffele": "+1100"}
-                const nameListTable = document.getElementById('odds-table');
+                const oddsTable = document.getElementById('odds-table');
+                oddsTable.innerHTML = ''; // Clear previous data
 
-                // Clear any previous data
-                nameListTable.innerHTML = '';
-
-                // Create the table header
                 const thead = document.createElement('thead');
                 const headerRow = document.createElement('tr');
 
-                const headerName = document.createElement('th');
-                headerName.textContent = "Player";
-
-                const headerOdds = document.createElement('th');
-                headerOdds.textContent = "Odds";
-
-                headerRow.appendChild(headerName);
-                headerRow.appendChild(headerOdds);
+                headerRow.innerHTML = "<th>Player</th><th>Odds</th>";
                 thead.appendChild(headerRow);
+                oddsTable.appendChild(thead);
 
-                // Append the header to the table
-                nameListTable.appendChild(thead);
-
-                // Populate the name list table with players and their odds
                 const tbody = document.createElement('tbody');
                 Object.entries(data).forEach(([name, odds]) => {
                     const row = document.createElement('tr');
 
                     const nameCell = document.createElement('td');
                     nameCell.textContent = name;
+                    nameCell.style.cursor = "pointer"; // Indicate it's clickable
+                    nameCell.addEventListener("click", () => addToDraftTable(name));
 
                     const oddsCell = document.createElement('td');
                     oddsCell.textContent = odds;
 
                     row.appendChild(nameCell);
                     row.appendChild(oddsCell);
-
                     tbody.appendChild(row);
                 });
 
-                // Append the table body
-                nameListTable.appendChild(tbody);
-
+                oddsTable.appendChild(tbody);
             })
             .catch(error => {
-                console.error("Error fetching the player odds:", error);
+                console.error("Error fetching player odds:", error);
                 alert("Failed to fetch player odds. Please try again later.");
             });
     });
 
-    const saveCsvButton = document.getElementById("save-csv-button");
+    // Function to add player from odds table to the draft table
+    function addToDraftTable(playerName) {
+        const emptyCell = [...draftTable.querySelectorAll('td[contenteditable="true"]')]
+            .find(cell => cell.textContent.trim() === '');
 
-    saveCsvButton.addEventListener("click", function () {
-        const table = document.getElementById("draft-table");
-        const rows = Array.from(table.querySelectorAll('tr'));
+        if (emptyCell) {
+            emptyCell.textContent = playerName;
+        } else {
+            alert("No empty slots available in the draft table.");
+        }
+    }
 
-        const csvData = [];
-
-        rows.forEach(row => {
-            const cells = Array.from(row.querySelectorAll('td, th'));
-            const rowData = cells.map(cell => {
-                return `"${cell.textContent.replace(/"/g, '""')}"`;
-            });
-            csvData.push(rowData.join(','));
-        });
+    // Save draft table as CSV
+    document.getElementById("save-csv-button").addEventListener("click", () => {
+        const rows = Array.from(draftTable.querySelectorAll('tr'));
+        const csvData = rows.map(row => 
+            Array.from(row.querySelectorAll('th, td'))
+                .map(cell => `"${cell.textContent.replace(/"/g, '""')}"`)
+                .join(',')
+        );
 
         const csvString = csvData.join('\n');
-
         const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
@@ -98,25 +85,20 @@ document.addEventListener("DOMContentLoaded", () => {
         link.click();
     });
 
-    const shuffleDraftOrderButton = document.getElementById("shuffle-draft-order-button");
-    shuffleDraftOrderButton.addEventListener("click", function () {
-        const originalNames = [
-            'Justin', 'Hen', 'Poz', 'Connor', 'Kev', 'Fran', 'Vitale', 'Reed', 'Guar'
-        ];
+    // Shuffle draft order (headers only)
+    document.getElementById("shuffle-draft-order-button").addEventListener("click", () => {
+        const headerCells = Array.from(draftTable.querySelectorAll('thead th'));
+        const names = headerCells.map(th => th.textContent);
 
-        // Shuffle the array using Fisher-Yates (Durstenfeld) algorithm
-        const shuffledNames = originalNames.slice(); // Copy the array to avoid modifying the original
-        for (let i = shuffledNames.length - 1; i > 0; i--) {
+        // Shuffle names using Fisher-Yates shuffle
+        for (let i = names.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
-            [shuffledNames[i], shuffledNames[j]] = [shuffledNames[j], shuffledNames[i]]; // Swap elements
+            [names[i], names[j]] = [names[j], names[i]];
         }
 
-        // Get all the table header cells
-        const headers = document.querySelectorAll('th');
-
-        // Assign the shuffled names back to the headers
-        shuffledNames.forEach((name, index) => {
-            headers[index].textContent = name;
+        // Update table headers
+        headerCells.forEach((th, index) => {
+            th.textContent = names[index];
         });
     });
 
