@@ -1,0 +1,79 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #FFFFFF; /* White background */
+    color: #006400; /* Dark Green text */
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Logo */
+.logo {
+    width: 150px;
+    margin: 20px 0;
+}
+
+/* Navigation Links */
+.nav-links {
+    margin-bottom: 20px;
+}
+
+.nav-links a {
+    font-size: 20px;
+    color: #006400; /* Dark Green */
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: bold;
+    transition: color 0.3s ease-in-out;
+}
+
+.nav-links a:hover {
+    color: #FFD700; /* Neon Yellow */
+}
+
+/* Tournament Selection */
+.tournament-selection {
+    margin: 20px 0;
+}
+
+#tournament-dropdown {
+    padding: 10px;
+    font-size: 16px;
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+th, td {
+    border: 1px solid #006400; /* Dark Green */
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #006400; /* Dark Green */
+    color: #FFFFFF; /* White */
+}
+
+tr:nth-child(even) {
+    background-color: #F5F5F5; /* Light Grey */
+}
+
+/* Section Headings */
+h2 {
+    color: #006400; /* Dark Green */
+    border-bottom: 2px solid #FFD700; /* Neon Yellow */
+    display: inline-block;
+    padding-bottom: 5px;
+}
