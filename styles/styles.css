@@ -61,7 +61,7 @@ button:disabled {
 
 /* Input Fields */
 input, select {
-    padding: 10px;
+    padding: 8px;
     font-size: 16px;
     border: 1px solid #006400;
     border-radius: 5px;
@@ -77,13 +77,15 @@ table {
 
 th, td {
     border: 1px solid #006400; /* Dark Green */
-    padding: 10px;
+    padding: 5px;
     text-align: left;
 }
 
 th {
+    border: 1px solid #e6c200; 
     background-color: #006400; /* Dark Green */
     color: #FFFFFF; /* White */
+    font-size: 15px;
 }
 
 /* Draft Table */
