@@ -7,11 +7,15 @@
     <link rel="stylesheet" href="../styles/leaderboard.css">
 </head>
 <body>
+    <header class="top-header">
+        <div class="header-container">
+            <h1 class="logo">GolfPicks</h1>
+            <nav class="nav-links">
+                <a href="../homepage.html">Home</a>
+            </nav>
+        </div>
+    </header>
     <div class="container">
-        <h1>GolfPicks</h1>
-        <nav class="nav-links">
-            <a href="../homepage.html">Home</a>
-        </nav>
         <div class="tournament-selection">
             <label for="tournament-dropdown">Select Tournament:</label>
             <select id="tournament-dropdown">
@@ -20,17 +24,17 @@
         </div>
         <div id="leaderboards">
             <div id="golfpicks-leaderboard">
-                <h2>Leaderboard</h2>
+                <h2 id="golfpicks-leaderboard-h1" style="display: none;">Leaderboard</h2>
                 <table id="golfpicks-table">
                 </table>
             </div>
             <div id="draft-results">
-                <h2>Draft Results</h2>
+                <h2 id="draft-results-h1" style="display: none;">Draft Results</h2>
                 <table id="draft-table">
                 </table>
             </div>
             <div id="espn-leaderboard">
-                <h2>ESPN Leaderboard</h2>
+                <h2 id="espn-leaderboard-h1" style="display: none;">ESPN Leaderboard</h2>
                 <table id="espn-table">
                 </table>
             </div>

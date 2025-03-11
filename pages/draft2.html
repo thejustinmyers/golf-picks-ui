@@ -7,8 +7,6 @@
     <link rel="stylesheet" href="../styles/styles.css">
 </head>
 <body>
-
-    <!-- Header Section -->
     <header class="top-header">
         <div class="header-container">
             <h1 class="logo">GolfPicks</h1>
@@ -17,7 +15,6 @@
             </nav>
         </div>
     </header>
-
     <div class="container">
         <div id="draftSetup">
             <label for="rounds">Number of Rounds:</label>
@@ -28,15 +25,9 @@
             <button id="randomizeOrder" style="display: none;">Randomize Draft Order</button>
             <button id="beginDraft" style="display: none;">Begin Draft</button>
         </div>
-
-        <!-- Draft Table -->
         <table id="draftTable"></table>
-
-        <!-- Tournament Selection -->
         <select id="tournament"></select>
         <button id="fetchOdds">Fetch Odds</button>
-
-        <!-- Available Players Table -->
         <div class="available-players">
             <table id="playersTable">
                 <thead></thead>
@@ -44,7 +35,6 @@
             </table>
         </div>
     </div>
-
     <script src="../scripts/script.js"></script>
 </body>
 </html>

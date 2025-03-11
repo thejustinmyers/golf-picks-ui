@@ -3,6 +3,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const golfpicksTable = document.getElementById("golfpicks-table");
     const espnTable = document.getElementById("espn-table");
     const draftTable = document.getElementById("draft-table");
+    const golfPicksLeaderboardH1 = document.getElementById("golfpicks-leaderboard-h1");
+    const draftResultsH1 = document.getElementById("draft-results-h1");
+    const espnLeaderboardH1 = document.getElementById("espn-leaderboard-h1");
 
     function loadTournaments() {
         fetch("http://0.0.0.0:8000/tournaments")
@@ -70,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(response => response.json())
             .then(data => {
                 draftTable.innerHTML = ""; // Clear previous results
-    
+
                 // Create table header with player names
                 let tableHTML = `
                     <thead>
@@ -80,10 +83,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     </thead>
                     <tbody>
                 `;
-    
+
                 // Get the number of draft picks per player (safe to assume all have same)
                 const numPicks = data[Object.keys(data)[0]].length;
-    
+
                 // Populate the table rows with draft picks
                 for (let i = 0; i < numPicks; i++) {
                     tableHTML += `<tr>`;
@@ -92,7 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     });
                     tableHTML += `</tr>`;
                 }
-    
+
                 tableHTML += `</tbody>`;
                 draftTable.innerHTML = tableHTML;
             })
@@ -101,10 +104,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 draftTable.innerHTML = '<tr><td colspan="100%">Failed to load draft results</td></tr>';
             });
     }
-    
+
 
 
     tournamentDropdown.addEventListener("change", () => {
+        golfPicksLeaderboardH1.style.display = "inline-block";
+        draftResultsH1.style.display = "inline-block";
+        espnLeaderboardH1.style.display = "inline-block";
         const selectedTournament = tournamentDropdown.value;
         if (selectedTournament) {
             loadGolfPicksLeaderboard(selectedTournament);
