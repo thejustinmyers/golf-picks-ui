@@ -1,7 +1,7 @@
 /* General Styles */
 body {
     background-color: white;
-    color: #045e2b; /* Masters Green */
+    color: #045e2b;
     font-family: Arial, sans-serif;
     display: flex;
     flex-direction: column;
@@ -18,26 +18,25 @@ body {
     padding: 20px;
 }
 
-/* Buttons (Matching Homepage) */
+/* General Button Styles */
 button {
-    background-color: #ffd700; /* Masters Gold */
-    color: #045e2b;
-    font-size: 1rem;
+    background: white;
+    color: #006847;
+    font-size: 18px;
+    font-weight: bold;
     padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
+    border: 2px solid #006847;
+    border-radius: 25px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 3px 3px 8px white;
 }
 
+/* Hover Effect */
 button:hover {
-    background-color: #e6c200;
-}
-
-button:disabled {
-    background-color: #cccccc;
-    color: #666666;
-    cursor: not-allowed;
+    background-color: #ffcc00;
+    transform: scale(1.05);
+    box-shadow: 3px 3px 12px white;
 }
 
 /* Navigation */
@@ -60,7 +59,8 @@ button:disabled {
 }
 
 /* Input Fields */
-input, select {
+input,
+select {
     padding: 8px;
     font-size: 16px;
     border: 1px solid #006400;
@@ -75,16 +75,20 @@ table {
     margin: 20px 0;
 }
 
-th, td {
-    border: 1px solid #006400; /* Dark Green */
+th,
+td {
+    border: 1px solid #006400;
+    /* Dark Green */
     padding: 5px;
     text-align: left;
 }
 
 th {
-    border: 1px solid #e6c200; 
-    background-color: #006400; /* Dark Green */
-    color: #FFFFFF; /* White */
+    border: 1px solid #e6c200;
+    background-color: #006400;
+    /* Dark Green */
+    color: #FFFFFF;
+    /* White */
     font-size: 15px;
 }
 
@@ -108,5 +112,6 @@ th {
 
 /* Hover Effect for Available Players */
 #playersTable tbody tr:hover {
-    background-color: #FFD700; /* Masters' yellow */
+    background-color: #FFD700;
+    /* Masters' yellow */
 }
