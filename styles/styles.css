@@ -3,22 +3,62 @@ body {
     background-color: white;
     color: #045e2b;
     font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     margin: 0;
     text-align: center;
 }
 
-/* Container */
+/* Top Header */
+.top-header {
+    width: 100%;
+    background-color: #006847; /* Dark Green */
+    color: white;
+    padding: 15px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.nav-links a {
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.nav-links a:hover {
+    background-color: #ffcc00;
+    color: #006847;
+}
+
+/* Ensure page content does not get hidden under the fixed header */
 .container {
     width: 90%;
-    margin: 0 auto;
+    margin: 80px auto 0; /* Push content down */
     padding: 20px;
 }
 
-/* General Button Styles */
+/* Buttons */
 button {
     background: white;
     color: #006847;
@@ -32,35 +72,14 @@ button {
     box-shadow: 3px 3px 8px white;
 }
 
-/* Hover Effect */
 button:hover {
     background-color: #ffcc00;
     transform: scale(1.05);
     box-shadow: 3px 3px 12px white;
 }
 
-/* Navigation */
-.nav-links a {
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 18px;
-    font-weight: bold;
-    text-decoration: none;
-    color: #006847;
-    border: 2px solid #006847;
-    border-radius: 25px;
-    transition: all 0.3s ease-in-out;
-}
-
-.nav-links a:hover {
-    background-color: #ffcc00;
-    color: #006847;
-    transform: scale(1.1);
-}
-
 /* Input Fields */
-input,
-select {
+input, select {
     padding: 8px;
     font-size: 16px;
     border: 1px solid #006400;
@@ -75,20 +94,15 @@ table {
     margin: 20px 0;
 }
 
-th,
-td {
+th, td {
     border: 1px solid #006400;
-    /* Dark Green */
     padding: 5px;
     text-align: left;
 }
 
 th {
-    border: 1px solid #e6c200;
     background-color: #006400;
-    /* Dark Green */
     color: #FFFFFF;
-    /* White */
     font-size: 15px;
 }
 
@@ -113,5 +127,4 @@ th {
 /* Hover Effect for Available Players */
 #playersTable tbody tr:hover {
     background-color: #FFD700;
-    /* Masters' yellow */
 }
