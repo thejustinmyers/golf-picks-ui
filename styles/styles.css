@@ -1,20 +1,24 @@
 /* General Styles */
 body {
+    background-color: white;
+    color: #045e2b; /* Masters Green */
     font-family: Arial, sans-serif;
-    background-color: #FFFFFF; /* White */
-    color: #006400; /* Dark Green */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     margin: 0;
-    padding: 0;
     text-align: center;
 }
 
+/* Container */
 .container {
     width: 90%;
     margin: 0 auto;
     padding: 20px;
 }
 
-/* Buttons */
+/* Buttons (Matching Homepage) */
 button {
     background-color: #ffd700; /* Masters Gold */
     color: #045e2b;
@@ -30,6 +34,13 @@ button:hover {
     background-color: #e6c200;
 }
 
+button:disabled {
+    background-color: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+}
+
+/* Navigation */
 .nav-links a {
     display: inline-block;
     padding: 10px 20px;
@@ -57,34 +68,6 @@ input, select {
     margin: 10px;
 }
 
-
-tr:nth-child(even) {
-    background-color: #F5F5F5; /* Light Grey */
-}
-
-/* Draft Table */
-#draftTable {
-    margin: 20px auto;
-    width: 100%;
-}
-
-/* Available Players Table */
-.available-players {
-    width: 100%;
-    margin: 20px auto;
-}
-
-/* Greying Out Picked Players */
-.picked {
-    color: grey;
-    pointer-events: none;
-}
-
-/* Hover Effect for Available Players */
-#playersTable tbody tr:hover {
-    background-color: #FFD700; /* Masters' yellow */
-}
-
 /* Tables */
 table {
     width: 100%;
@@ -101,4 +84,27 @@ th, td {
 th {
     background-color: #006400; /* Dark Green */
     color: #FFFFFF; /* White */
+}
+
+/* Draft Table */
+#draftTable {
+    margin: 20px auto;
+    width: 100%;
+}
+
+/* Available Players Table */
+.available-players {
+    width: 100%;
+    margin: 20px auto;
+}
+
+/* Picked Player Styling */
+.picked {
+    color: grey;
+    pointer-events: none;
+}
+
+/* Hover Effect for Available Players */
+#playersTable tbody tr:hover {
+    background-color: #FFD700; /* Masters' yellow */
 }

@@ -3,9 +3,11 @@ document.addEventListener("DOMContentLoaded", function() {
     const fetchOddsButton = document.getElementById("fetchOdds");
     const playersTableBody = document.getElementById("playersTable").querySelector("tbody");
     const playersTableHeader = document.getElementById("playersTable").querySelector("thead");
-    const setupDraftButton = document.getElementById("setupDraft");
+    const createDraftButton = document.getElementById("createDraft");
     const randomizeOrderButton = document.getElementById("randomizeOrder");
+    const beginDraftButton = document.getElementById("beginDraft");
     const draftTable = document.getElementById("draftTable");
+    const draftSetup = document.getElementById("draftSetup");
 
     let playersData = {}; // Stores player names & odds
     let draftCells = []; // Stores available draft table cells
@@ -41,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // Create Draft Table
-    setupDraftButton.addEventListener("click", function() {
+    createDraftButton.addEventListener("click", function() {
         const rounds = parseInt(document.getElementById("rounds").value);
         const players = parseInt(document.getElementById("players").value);
         if (isNaN(rounds) || isNaN(players) || rounds < 1 || players < 2) {
@@ -64,17 +66,18 @@ document.addEventListener("DOMContentLoaded", function() {
             let row = draftTable.insertRow();
             for (let p = 0; p < players; p++) {
                 let cell = row.insertCell();
-                cell.setAttribute("contenteditable", "true"); // Make all cells editable
-                draftCells.push(cell); // Store reference for picking players
+                cell.setAttribute("contenteditable", "true");
+                draftCells.push(cell);
             }
         }
+        randomizeOrderButton.style.display = "inline-block";
+        beginDraftButton.style.display = "inline-block";
     });
 
     // Pick Player Function
     function pickPlayer(row, player) {
-        row.classList.add("picked"); // Grey out picked player
+        row.classList.add("picked");
 
-        // Find the first empty cell and place the player's name
         for (let cell of draftCells) {
             if (cell.textContent.trim() === "") {
                 cell.textContent = player;
@@ -88,5 +91,10 @@ document.addEventListener("DOMContentLoaded", function() {
         let headers = Array.from(draftTable.rows[0].cells);
         headers.sort(() => Math.random() - 0.5);
         headers.forEach(cell => draftTable.rows[0].appendChild(cell));
+    });
+
+    // Begin Draft
+    beginDraftButton.addEventListener("click", function() {
+        draftSetup.style.display = "none";
     });
 });

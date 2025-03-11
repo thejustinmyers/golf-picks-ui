@@ -13,12 +13,15 @@
             <a href="../homepage.html">Home</a>
         </nav>
 
-        <label for="rounds">Number of Rounds:</label>
-        <input type="number" id="rounds" min="1" max="10">
-        <label for="players">Number of Players:</label>
-        <input type="number" id="players" min="2" max="10">
-        <button id="setupDraft">Setup Draft Table</button>
-        <button id="randomizeOrder">Randomize Order</button>
+        <div id="draftSetup">
+            <label for="rounds">Number of Rounds:</label>
+            <input type="number" id="rounds" name="rounds" value="6" min="1" max="10">
+            <label for="players">Number of Players:</label>
+            <input type="number" id="players" value="6" min="2" max="10">
+            <button id="createDraft">Create Draft Table</button>
+            <button id="randomizeOrder" style="display: none;">Randomize Draft Order</button>
+            <button id="beginDraft" style="display: none;">Begin Draft</button>
+        </div>
 
         <!-- Draft Table -->
         <table id="draftTable">
