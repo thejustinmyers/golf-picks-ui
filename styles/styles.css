@@ -1,0 +1,104 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #FFFFFF; /* White */
+    color: #006400; /* Dark Green */
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.container {
+    width: 90%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Buttons */
+button {
+    background-color: #ffd700; /* Masters Gold */
+    color: #045e2b;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #e6c200;
+}
+
+.nav-links a {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #006847;
+    border: 2px solid #006847;
+    border-radius: 25px;
+    transition: all 0.3s ease-in-out;
+}
+
+.nav-links a:hover {
+    background-color: #ffcc00;
+    color: #006847;
+    transform: scale(1.1);
+}
+
+/* Input Fields */
+input, select {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #006400;
+    border-radius: 5px;
+    margin: 10px;
+}
+
+
+tr:nth-child(even) {
+    background-color: #F5F5F5; /* Light Grey */
+}
+
+/* Draft Table */
+#draftTable {
+    margin: 20px auto;
+    width: 100%;
+}
+
+/* Available Players Table */
+.available-players {
+    width: 100%;
+    margin: 20px auto;
+}
+
+/* Greying Out Picked Players */
+.picked {
+    color: grey;
+    pointer-events: none;
+}
+
+/* Hover Effect for Available Players */
+#playersTable tbody tr:hover {
+    background-color: #FFD700; /* Masters' yellow */
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+th, td {
+    border: 1px solid #006400; /* Dark Green */
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #006400; /* Dark Green */
+    color: #FFFFFF; /* White */
+}

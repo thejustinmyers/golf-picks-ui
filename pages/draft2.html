@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golf Draft</title>
+    <link rel="stylesheet" href="../styles/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>GolfPicks</h1>
+        <nav class="nav-links">
+            <a href="../homepage.html">Home</a>
+        </nav>
+
+        <label for="rounds">Number of Rounds:</label>
+        <input type="number" id="rounds" min="1" max="10">
+        <label for="players">Number of Players:</label>
+        <input type="number" id="players" min="2" max="10">
+        <button id="setupDraft">Setup Draft Table</button>
+        <button id="randomizeOrder">Randomize Order</button>
+
+        <!-- Draft Table -->
+        <table id="draftTable">
+            <!-- Table will be generated dynamically -->
+        </table>
+
+        <!-- Tournament Selection -->
+        <select id="tournament"></select>
+        <button id="fetchOdds">Fetch Odds</button>
+
+        <!-- Available Players Table -->
+        <div class="available-players">
+            <table id="playersTable">
+                <thead>
+                    <!-- Headers will be dynamically added here -->
+                </thead>
+                <tbody>
+                    <!-- Players will be dynamically added here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="../scripts/script.js"></script>
+</body>
+</html>
