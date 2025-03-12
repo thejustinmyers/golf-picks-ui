@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const beginDraftButton = document.getElementById("beginDraft");
     const draftTable = document.getElementById("draftTable");
     const saveDraft = document.getElementById("saveDraft");
+    const tournamentSelect = document.getElementById("tournament");
 
     let playersData = {}; // Stores player names & odds
     let draftCells = []; // Stores available draft table cells
@@ -98,4 +99,57 @@ document.addEventListener("DOMContentLoaded", function () {
         draftSetup.style.display = "none";
         saveDraft.style.display = "inline-block";
     });
+
+    // Save draft table as CSV
+    saveDraft.addEventListener("click", async () => {
+        const rows = Array.from(draftTable.querySelectorAll("tr"));
+        const csvData = rows.map(row =>
+            Array.from(row.querySelectorAll("th, td"))
+                .map(cell => `"${cell.textContent.replace(/"/g, '""')}"`)
+                .join(",")
+        );
+        const csvString = csvData.join("\n");
+        const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "draft_table.csv";
+        link.click();
+
+        const tournamentName = tournamentSelect.value;
+        if (!tournamentName) {
+            alert("Please select a tournament.");
+            return;
+        }
+
+        const headers = Array.from(draftTable.querySelectorAll("thead th"))
+            .map(th => th.textContent.trim());
+        const draftData = {};
+        headers.forEach(header => draftData[header] = []);
+
+        draftTable.querySelectorAll("tbody tr").forEach(row => {
+            Array.from(row.querySelectorAll("td")).forEach((cell, index) => {
+                if (cell.textContent.trim()) {
+                    draftData[headers[index]].push(cell.textContent.trim());
+                }
+            });
+        });
+
+        try {
+            const response = await fetch(`http://0.0.0.0:8000/draft/${tournamentName}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(draftData)
+            });
+            if (!response.ok) {
+                throw new Error("Failed to save draft to API");
+            }
+            alert("Draft saved successfully!");
+        } catch (error) {
+            console.error("Error saving draft to API:", error);
+            alert("Failed to save draft. Please try again.");
+        }
+    });
+
 });
