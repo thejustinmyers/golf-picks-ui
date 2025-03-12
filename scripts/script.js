@@ -91,11 +91,17 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Randomize Order
+    // Randomize Order via Fisher-Yates shuffle
     randomizeOrderButton.addEventListener("click", function () {
-        let headers = Array.from(draftTable.rows[0].cells);
-        headers.sort(() => Math.random() - 0.5);
-        headers.forEach(cell => draftTable.rows[0].appendChild(cell));
+        let headerRow = draftTable.rows[0]; 
+        let headers = Array.from(headerRow.cells);
+    
+        for (let i = headers.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1)); 
+            [headers[i], headers[j]] = [headers[j], headers[i]];
+        }
+    
+        headers.forEach(cell => headerRow.appendChild(cell));
     });
 
     // Begin Draft
