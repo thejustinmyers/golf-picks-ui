@@ -1,179 +1,177 @@
-document.addEventListener("DOMContentLoaded", async () => {
-    const draftTable = document.getElementById("draft-table");
-    const draftCells = draftTable.querySelectorAll('td[contenteditable="true"]');
-    const tournamentSelect = document.getElementById("tournament-selection");
+document.addEventListener("DOMContentLoaded", function () {
+    const tournamentDropdown = document.getElementById("tournament");
+    const fetchOddsButton = document.getElementById("fetchOdds");
+    const playersTableBody = document.querySelector("#playersTable tbody");
+    const playersTableHeader = document.querySelector("#playersTable thead");
+    const createDraftButton = document.getElementById("createDraft");
+    const randomizeOrderButton = document.getElementById("randomizeOrder");
+    const beginDraftButton = document.getElementById("beginDraft");
+    const draftTable = document.getElementById("draftTable");
+    const saveDraft = document.getElementById("saveDraft");
 
-    function formatTournamentName(tournamentId) {
-        return tournamentId
-            .replace(/-/g, " ")
-            .replace(/\b\w/g, char => char.toUpperCase());
-    }
+    let draftCells = [];
 
-    async function loadTournaments() {
+    // Fetch available tournaments and populate dropdown
+    async function fetchTournaments() {
         try {
             const response = await fetch("http://0.0.0.0:8000/tournaments");
-            if (!response.ok) {
-                throw new Error("Failed to fetch tournaments");
-            }
-            const tournaments = await response.json();
-            tournamentSelect.innerHTML = "";
-            tournaments.forEach(tournamentId => {
+            if (!response.ok) throw new Error("Failed to fetch tournaments");
+            const data = await response.json();
+
+            const fragment = document.createDocumentFragment();
+            data.forEach(tournament => {
                 const option = document.createElement("option");
-                option.value = tournamentId;
-                option.textContent = formatTournamentName(tournamentId);
-                tournamentSelect.appendChild(option);
+                option.value = tournament;
+                option.textContent = tournament.replace(/-/g, " ").toUpperCase();
+                fragment.appendChild(option);
             });
+            tournamentDropdown.appendChild(fragment);
         } catch (error) {
-            console.error("Error loading tournaments:", error);
+            console.error("Error fetching tournaments:", error);
+            alert("Failed to load tournaments.");
+        }
+    }
+    fetchTournaments();
+
+    // Fetch player odds and populate table
+    fetchOddsButton.addEventListener("click", async function () {
+        const tournament = tournamentDropdown.value;
+        if (!tournament) return alert("Please select a tournament.");
+
+        try {
+            const response = await fetch(`http://0.0.0.0:8000/odds/${tournament}`);
+            if (!response.ok) throw new Error("Failed to fetch odds");
+            const data = await response.json();
+
+            playersTableHeader.innerHTML = "<tr><th>Player</th><th>Odds</th></tr>";
+            playersTableBody.innerHTML = "";
+
+            const fragment = document.createDocumentFragment();
+            Object.entries(data).forEach(([player, odds]) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `<td>${player}</td><td>${odds}</td>`;
+                row.addEventListener("click", () => pickPlayer(row, player));
+                fragment.appendChild(row);
+            });
+            playersTableBody.appendChild(fragment);
+        } catch (error) {
+            console.error("Error fetching odds:", error);
+            alert("Failed to load player odds.");
+        }
+    });
+
+    // Create Draft Table
+    createDraftButton.addEventListener("click", function () {
+        const rounds = parseInt(document.getElementById("rounds").value, 10);
+        const players = parseInt(document.getElementById("players").value, 10);
+        if (isNaN(rounds) || isNaN(players) || rounds < 1 || players < 2) {
+            return alert("Please enter valid numbers for rounds and players.");
+        }
+
+        draftTable.innerHTML = "";
+        draftCells = [];
+
+        const thead = draftTable.createTHead();
+        const headerRow = thead.insertRow();
+
+        for (let i = 1; i <= players; i++) {
+            const th = document.createElement("th");
+            th.setAttribute("contenteditable", "true");
+            th.textContent = `Player ${i}`;
+            headerRow.appendChild(th);
+        }
+
+        const tbody = draftTable.createTBody();
+        for (let r = 0; r < rounds; r++) {
+            const row = tbody.insertRow();
+            for (let p = 0; p < players; p++) {
+                const cell = row.insertCell();
+                cell.setAttribute("contenteditable", "true");
+                draftCells.push(cell);
+            }
+        }
+
+        randomizeOrderButton.style.display = "inline-block";
+        beginDraftButton.style.display = "inline-block";
+    });
+
+    // Pick Player Function
+    function pickPlayer(row, player) {
+        row.classList.add("picked");
+        for (const cell of draftCells) {
+            if (!cell.textContent.trim()) {
+                cell.textContent = player;
+                return;
+            }
         }
     }
 
-    await loadTournaments();
+    // Randomize Order via Fisher-Yates shuffle
+    randomizeOrderButton.addEventListener("click", function () {
+        const headerRow = draftTable.rows[0];
+        const headers = Array.from(headerRow.cells);
 
-    // Only allow letters and spaces in contenteditable cells
-    draftCells.forEach(cell => {
-        cell.addEventListener("input", function () {
-            this.textContent = this.textContent.replace(/[^a-zA-Z\s]/g, "");
-        });
-    });
-
-    // Fetch odds and populate table
-    document.getElementById("fetch-odds-button").addEventListener("click", () => {
-        const tournamentName = tournamentSelect.value;
-
-        if (!tournamentName) {
-            alert("Please select a tournament.");
-            return;
+        for (let i = headers.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [headers[i], headers[j]] = [headers[j], headers[i]];
         }
 
-        fetch(`http://0.0.0.0:8000/odds/${tournamentName}`)
-            .then(response => response.json())
-            .then(data => {
-                const oddsTable = document.getElementById("odds-table");
-                oddsTable.innerHTML = ""; // Clear previous data
-
-                const thead = document.createElement("thead");
-                const headerRow = document.createElement("tr");
-
-                headerRow.innerHTML = "<th>Player</th><th>Odds</th>";
-                thead.appendChild(headerRow);
-                oddsTable.appendChild(thead);
-
-                const tbody = document.createElement("tbody");
-                Object.entries(data).forEach(([name, odds]) => {
-                    const row = document.createElement("tr");
-
-                    const nameCell = document.createElement("td");
-                    nameCell.textContent = name;
-                    nameCell.style.cursor = "pointer"; // Indicate it's clickable
-                    nameCell.addEventListener("click", () => addToDraftTable(name));
-
-                    const oddsCell = document.createElement("td");
-                    oddsCell.textContent = odds;
-
-                    row.appendChild(nameCell);
-                    row.appendChild(oddsCell);
-                    tbody.appendChild(row);
-                });
-
-                oddsTable.appendChild(tbody);
-            })
-            .catch(error => {
-                console.error("Error fetching player odds:", error);
-                alert("Failed to fetch player odds. Please try again later.");
-            });
+        headers.forEach(cell => headerRow.appendChild(cell));
     });
 
-    // Function to add player from odds table to the draft table
-    function addToDraftTable(playerName) {
-        const emptyCell = [...draftTable.querySelectorAll('td[contenteditable="true"]')]
-            .find(cell => cell.textContent.trim() === "");
+    // Begin Draft
+    beginDraftButton.addEventListener("click", function () {
+        document.getElementById("draftSetup").style.display = "none";
+        saveDraft.style.display = "inline-block";
+    });
 
-        if (emptyCell) {
-            emptyCell.textContent = playerName;
+    // Save draft table as CSV and send to API
+    saveDraft.addEventListener("click", async () => {
+        const tournamentName = tournamentDropdown.value;
+        if (!tournamentName) return alert("Please select a tournament.");
 
-            // Grey out the player in the odds table
-            const oddsTable = document.getElementById("odds-table");
-            const rows = oddsTable.querySelectorAll("tbody tr");
-
-            rows.forEach(row => {
-                const nameCell = row.querySelector("td:first-child");
-                if (nameCell && nameCell.textContent === playerName) {
-                    row.style.opacity = "0.5"; // Grey out effect
-                    row.style.pointerEvents = "none"; // Disable clicking
-                }
-            });
-        } else {
-            alert("No empty slots available in the draft table.");
-        }
-    }
-
-    // Save draft table as CSV
-    document.getElementById("save-csv-button").addEventListener("click", async () => {
         const rows = Array.from(draftTable.querySelectorAll("tr"));
-        const csvData = rows.map(row =>
+        const csvString = rows.map(row =>
             Array.from(row.querySelectorAll("th, td"))
                 .map(cell => `"${cell.textContent.replace(/"/g, '""')}"`)
                 .join(",")
-        );
-        const csvString = csvData.join("\n");
+        ).join("\n");
+
+        // Save CSV locally
         const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
         link.download = "draft_table.csv";
         link.click();
 
-        const tournamentName = tournamentSelect.value;
-        if (!tournamentName) {
-            alert("Please select a tournament.");
-            return;
-        }
+        // Prepare JSON data for API
+        const headerRow = draftTable.querySelector("thead tr");
+        const headers = headerRow ? Array.from(headerRow.querySelectorAll("th")).map(th => th.textContent.trim()) : [];
+        if (headers.length === 0) return alert("Error: No headers found in the table.");
 
-        const headers = Array.from(draftTable.querySelectorAll("thead th"))
-            .map(th => th.textContent.trim());
         const draftData = {};
-        headers.forEach(header => draftData[header] = []);
+        headers.forEach(header => (draftData[header] = []));
 
         draftTable.querySelectorAll("tbody tr").forEach(row => {
-            Array.from(row.querySelectorAll("td")).forEach((cell, index) => {
-                if (cell.textContent.trim()) {
-                    draftData[headers[index]].push(cell.textContent.trim());
-                }
+            const cells = Array.from(row.querySelectorAll("td"));
+            cells.forEach((cell, index) => {
+                if (headers[index]) draftData[headers[index]].push(cell.textContent.trim());
             });
         });
 
+        // Send draft data to API
         try {
             const response = await fetch(`http://0.0.0.0:8000/draft/${tournamentName}`, {
                 method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(draftData)
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(draftData),
             });
-            if (!response.ok) {
-                throw new Error("Failed to save draft to API");
-            }
+
+            if (!response.ok) throw new Error("Failed to save draft to API");
             alert("Draft saved successfully!");
         } catch (error) {
-            console.error("Error saving draft to API:", error);
+            console.error("Error saving draft:", error);
             alert("Failed to save draft. Please try again.");
         }
-    });
-
-    // Shuffle draft order (headers only)
-    document.getElementById("shuffle-draft-order-button").addEventListener("click", () => {
-        const headerCells = Array.from(draftTable.querySelectorAll("thead th"));
-        const names = headerCells.map(th => th.textContent);
-
-        // Shuffle names using Fisher-Yates shuffle
-        for (let i = names.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [names[i], names[j]] = [names[j], names[i]];
-        }
-
-        // Update table headers
-        headerCells.forEach((th, index) => {
-            th.textContent = names[index];
-        });
     });
 });
