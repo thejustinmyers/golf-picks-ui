@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const tournamentDropdown = document.getElementById("tournament");
     const fetchOddsButton = document.getElementById("fetchOdds");
     const playersTableBody = document.getElementById("playersTable").querySelector("tbody");
@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const randomizeOrderButton = document.getElementById("randomizeOrder");
     const beginDraftButton = document.getElementById("beginDraft");
     const draftTable = document.getElementById("draftTable");
-    const draftSetup = document.getElementById("draftSetup");
+    const saveDraft = document.getElementById("saveDraft");
 
     let playersData = {}; // Stores player names & odds
     let draftCells = []; // Stores available draft table cells
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
     // Fetch player odds
-    fetchOddsButton.addEventListener("click", function() {
+    fetchOddsButton.addEventListener("click", function () {
         const tournament = tournamentDropdown.value;
         fetch(`http://0.0.0.0:8000/odds/${tournament}`)
             .then(response => response.json())
@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // Create Draft Table
-    createDraftButton.addEventListener("click", function() {
+    createDraftButton.addEventListener("click", function () {
         const rounds = parseInt(document.getElementById("rounds").value);
         const players = parseInt(document.getElementById("players").value);
         if (isNaN(rounds) || isNaN(players) || rounds < 1 || players < 2) {
@@ -87,14 +87,15 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Randomize Order
-    randomizeOrderButton.addEventListener("click", function() {
+    randomizeOrderButton.addEventListener("click", function () {
         let headers = Array.from(draftTable.rows[0].cells);
         headers.sort(() => Math.random() - 0.5);
         headers.forEach(cell => draftTable.rows[0].appendChild(cell));
     });
 
     // Begin Draft
-    beginDraftButton.addEventListener("click", function() {
+    beginDraftButton.addEventListener("click", function () {
         draftSetup.style.display = "none";
+        saveDraft.style.display = "inline-block";
     });
 });
