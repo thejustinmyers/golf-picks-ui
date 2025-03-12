@@ -10,7 +10,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const saveDraft = document.getElementById("saveDraft");
     const tournamentSelect = document.getElementById("tournament");
 
-    let playersData = {}; // Stores player names & odds
     let draftCells = []; // Stores available draft table cells
 
     // Fetch available tournaments
@@ -55,25 +54,30 @@ document.addEventListener("DOMContentLoaded", function () {
         draftTable.innerHTML = "";
         draftCells = [];
 
-        let headerRow = draftTable.insertRow();
+        let thead = draftTable.createTHead();
+        let headerRow = thead.insertRow();
+
         for (let i = 1; i <= players; i++) {
             let th = document.createElement("th");
-            th.setAttribute("contenteditable", "true"); // Allow editing player names
+            th.setAttribute("contenteditable", "true");
             th.textContent = `Player ${i}`;
             headerRow.appendChild(th);
         }
 
+        let tbody = draftTable.createTBody();
         for (let r = 0; r < rounds; r++) {
-            let row = draftTable.insertRow();
+            let row = tbody.insertRow();
             for (let p = 0; p < players; p++) {
                 let cell = row.insertCell();
                 cell.setAttribute("contenteditable", "true");
                 draftCells.push(cell);
             }
         }
+
         randomizeOrderButton.style.display = "inline-block";
         beginDraftButton.style.display = "inline-block";
     });
+
 
     // Pick Player Function
     function pickPlayer(row, player) {
@@ -103,12 +107,12 @@ document.addEventListener("DOMContentLoaded", function () {
     // Save draft table as CSV
     saveDraft.addEventListener("click", async () => {
         const rows = Array.from(draftTable.querySelectorAll("tr"));
-        const csvData = rows.map(row =>
+        const csvString = rows.map(row =>
             Array.from(row.querySelectorAll("th, td"))
                 .map(cell => `"${cell.textContent.replace(/"/g, '""')}"`)
                 .join(",")
-        );
-        const csvString = csvData.join("\n");
+        ).join("\n");
+
         const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
@@ -121,14 +125,29 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        const headers = Array.from(draftTable.querySelectorAll("thead th"))
-            .map(th => th.textContent.trim());
+        const headerRow = draftTable.querySelector("thead tr");
+        const headers = headerRow ? Array.from(headerRow.querySelectorAll("th")).map(th => th.textContent.trim()) : [];
+
+        if (headers.length === 0) {
+            console.error("No headers found! Ensure your table has a <thead> with <th> elements.");
+            alert("Error: No headers found in the table.");
+            return;
+        }
+
         const draftData = {};
         headers.forEach(header => draftData[header] = []);
 
-        draftTable.querySelectorAll("tbody tr").forEach(row => {
-            Array.from(row.querySelectorAll("td")).forEach((cell, index) => {
-                if (cell.textContent.trim()) {
+        const rowsBody = draftTable.querySelectorAll("tbody tr");
+        if (rowsBody.length === 0) {
+            console.error("No rows found in tbody.");
+            alert("Error: No player data found in the table.");
+            return;
+        }
+
+        rowsBody.forEach(row => {
+            const cells = Array.from(row.querySelectorAll("td"));
+            cells.forEach((cell, index) => {
+                if (headers[index]) {  // Ensure headers[index] exists
                     draftData[headers[index]].push(cell.textContent.trim());
                 }
             });
@@ -137,11 +156,10 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             const response = await fetch(`http://0.0.0.0:8000/draft/${tournamentName}`, {
                 method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(draftData)
             });
+
             if (!response.ok) {
                 throw new Error("Failed to save draft to API");
             }
@@ -151,5 +169,7 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("Failed to save draft. Please try again.");
         }
     });
+
+
 
 });
