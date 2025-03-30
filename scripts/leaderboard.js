@@ -29,6 +29,16 @@ document.addEventListener("DOMContentLoaded", () => {
         fetch(`http://0.0.0.0:8000/scores/${tournament}`)
             .then(response => response.json())
             .then(data => {
+
+                golfpicksTable.innerHTML = "<tr><th>Player</th><th>Score</th></tr>";
+
+                if (Object.keys(data).length === 0) {
+                    const row = document.createElement("tr");
+                    row.innerHTML = "<td colspan='4'>No draft found.</td>";
+                    golfpicksTable.appendChild(row);
+                    return;
+                }
+
                 golfpicksTable.innerHTML = `
                     <thead>
                         <tr>
@@ -88,7 +98,14 @@ document.addEventListener("DOMContentLoaded", () => {
         fetch(`http://0.0.0.0:8000/draft/${tournament}`)
             .then(response => response.json())
             .then(data => {
-                draftTable.innerHTML = ""; // Clear previous results
+                draftTable.innerHTML = "<tr><th>Player</th></tr>";
+
+                if (Object.keys(data).length === 0) {
+                    const row = document.createElement("tr");
+                    row.innerHTML = "<td colspan='4'>No draft found.</td>";
+                    draftTable.appendChild(row);
+                    return;
+                }
 
                 // Create table header with player names
                 let tableHTML = `
