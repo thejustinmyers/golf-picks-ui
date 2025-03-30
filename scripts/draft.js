@@ -109,10 +109,19 @@ document.addEventListener("DOMContentLoaded", function () {
     // Pick Player Function
     function pickPlayer(row, player) {
         row.classList.add("picked");
-        for (const cell of draftCells) {
-            if (!cell.textContent.trim()) {
-                cell.textContent = player;
-                return;
+        
+        let rows = draftTable.querySelectorAll("tbody tr");
+        let numPlayers = draftTable.rows[0].cells.length;
+        
+        for (let r = 0; r < rows.length; r++) {
+            let cells = rows[r].cells;
+            let order = r % 2 === 0 ? [...Array(numPlayers).keys()] : [...Array(numPlayers).keys()].reverse();
+            
+            for (let i of order) {
+                if (!cells[i].textContent.trim()) {
+                    cells[i].textContent = player;
+                    return;
+                }
             }
         }
     }
