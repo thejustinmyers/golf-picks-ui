@@ -124,8 +124,8 @@ th {
 
 /* Picked Player Styling */
 .picked {
-    color: grey;
     pointer-events: none;
+    background-color: rgb(226, 226, 226);
 }
 
 /* Hover Effect for Available Players */

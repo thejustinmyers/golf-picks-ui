@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const saveDraft = document.getElementById("saveDraft");
 
     let draftCells = [];
+    playersTableBody.style.pointerEvents = "none";
 
     // Fetch available tournaments and populate dropdown
     async function fetchTournaments() {
@@ -147,6 +148,7 @@ document.addEventListener("DOMContentLoaded", function () {
     beginDraftButton.addEventListener("click", function () {
         document.getElementById("draftSetup").style.display = "none";
         saveDraft.style.display = "inline-block";
+        playersTableBody.style.pointerEvents = "auto";
     });
 
     // Save draft table as CSV and send to API
