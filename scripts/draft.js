@@ -120,6 +120,10 @@ document.addEventListener("DOMContentLoaded", function () {
             for (let i of order) {
                 if (!cells[i].textContent.trim()) {
                     cells[i].textContent = player;
+    
+                    // Move the selected player to the bottom of the odds table
+                    playersTableBody.appendChild(row);
+    
                     return;
                 }
             }
