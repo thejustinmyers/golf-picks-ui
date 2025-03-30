@@ -56,15 +56,31 @@ document.addEventListener("DOMContentLoaded", () => {
         fetch(`http://0.0.0.0:8000/leaderboard/${tournament}`)
             .then(response => response.json())
             .then(data => {
-                espnTable.innerHTML = "<tr><th>Position</th><th>Player</th></tr>";
-                Object.values(data).map(player => {
+                espnTable.innerHTML = "<tr><th>Position</th><th>Player</th><th>Score</th><th>Status</th></tr>";
+                
+                if (Object.keys(data).length === 0) {
                     const row = document.createElement("tr");
-                    row.innerHTML = `<td>${player.POS}</td><td>${player.PLAYER}</td>`;
+                    row.innerHTML = "<td colspan='4'>The tournament has not started yet.</td>";
+                    espnTable.appendChild(row);
+                    return;
+                }
+                
+                Object.entries(data).forEach(([playerName, player]) => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${player.position}</td>
+                        <td>
+                            <img src="${player.headshot}" alt="${playerName}"> 
+                            <img src="${player.flag}" alt="Flag"> 
+                            ${playerName}
+                        </td>
+                        <td>${player.score}</td>
+                        <td>${player.status}</td>
+                    `;
                     espnTable.appendChild(row);
                 });
             })
             .catch(error => console.error("Error fetching ESPN leaderboard:", error));
-        console.log("here")
     }
 
 
