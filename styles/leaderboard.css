@@ -1,8 +1,10 @@
 /* General Styles */
 body {
     font-family: Arial, sans-serif;
-    background-color: #FFFFFF; /* White background */
-    color: #006400; /* Dark Green text */
+    background-color: #FFFFFF;
+    /* White background */
+    color: #006400;
+    /* Dark Green text */
     margin: 0;
     padding: 0;
     text-align: center;
@@ -11,7 +13,8 @@ body {
 /* Top Header */
 .top-header {
     width: 100%;
-    background-color: #006847; /* Dark Green */
+    background-color: #006847;
+    /* Dark Green */
     color: white;
     padding: 15px 0;
     position: fixed;
@@ -55,7 +58,8 @@ body {
 /* Ensure page content does not get hidden under the fixed header */
 .container {
     width: 90%;
-    margin: 80px auto 0; /* Push content down */
+    margin: 80px auto 0;
+    /* Push content down */
     padding: 20px;
 }
 
@@ -76,25 +80,46 @@ table {
     margin: 20px 0;
 }
 
-th, td {
-    border: 1px solid #006400; /* Dark Green */
+th,
+td {
+    border: 1px solid #006400;
+    /* Dark Green */
     padding: 10px;
     text-align: left;
 }
 
 th {
-    background-color: #006400; /* Dark Green */
-    color: #FFFFFF; /* White */
+    background-color: #006400;
+    /* Dark Green */
+    color: #FFFFFF;
+    /* White */
 }
 
 tr:nth-child(even) {
-    background-color: #F5F5F5; /* Light Grey */
+    background-color: #F5F5F5;
+    /* Light Grey */
 }
 
 /* Section Headings */
 h2 {
-    color: #006400; /* Dark Green */
-    border-bottom: 2px solid #FFD700; /* Neon Yellow */
+    color: #006400;
+    /* Dark Green */
+    border-bottom: 2px solid #FFD700;
+    /* Neon Yellow */
     display: inline-block;
     padding-bottom: 5px;
+}
+
+.headshot {
+    width: 3%;
+    height: auto;
+    border-radius: 50%;
+    vertical-align: middle;
+}
+
+.flag {
+    width: 3%;
+    height: auto;
+    margin-left: 5px;
+    vertical-align: middle;
 }
