@@ -41,10 +41,19 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             const response = await fetch(`http://0.0.0.0:8000/odds/${tournament}`);
             if (!response.ok) throw new Error("Failed to fetch odds");
+
             const data = await response.json();
 
+            // Clear existing table headers and body
             playersTableHeader.innerHTML = "<tr><th>Player</th><th>Odds</th></tr>";
             playersTableBody.innerHTML = "";
+
+            if (Object.keys(data).length === 0) {
+                const row = document.createElement("tr");
+                row.innerHTML = "<td colspan='2'>DraftKings odds not found, the tournament may have been played already.</td>";
+                playersTableBody.appendChild(row);
+                return;
+            }
 
             const fragment = document.createDocumentFragment();
             Object.entries(data).forEach(([player, odds]) => {
@@ -53,12 +62,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 row.addEventListener("click", () => pickPlayer(row, player));
                 fragment.appendChild(row);
             });
+
             playersTableBody.appendChild(fragment);
         } catch (error) {
             console.error("Error fetching odds:", error);
             alert("Failed to load player odds.");
         }
     });
+
 
     // Create Draft Table
     createDraftButton.addEventListener("click", function () {
