@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const espnLeaderboardH1 = document.getElementById("espn-leaderboard-h1");
 
     function loadTournaments() {
-        fetch("http://0.0.0.0:8000/tournaments")
+        fetch("https://zmo8pai6y9.execute-api.us-east-1.amazonaws.com/tournaments")
             .then(response => response.json())
             .then(tournaments => {
                 tournamentDropdown.innerHTML = '<option value="">Select a tournament</option>';
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function loadGolfPicksLeaderboard(tournament) {
-        fetch(`http://0.0.0.0:8000/scores/${tournament}`)
+        fetch(`https://zmo8pai6y9.execute-api.us-east-1.amazonaws.com/scores/${tournament}`)
             .then(response => response.json())
             .then(data => {
 
@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function loadESPNLeaderboard(tournament) {
-        fetch(`http://0.0.0.0:8000/leaderboard/${tournament}`)
+        fetch(`https://zmo8pai6y9.execute-api.us-east-1.amazonaws.com/leaderboard/${tournament}`)
             .then(response => response.json())
             .then(data => {
                 espnTable.innerHTML = "<tr><th>Position</th><th>Player</th><th>Score</th><th>Status</th></tr>";
@@ -95,7 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     function loadDraftResults(tournament) {
-        fetch(`http://0.0.0.0:8000/draft/${tournament}`)
+        fetch(`https://zmo8pai6y9.execute-api.us-east-1.amazonaws.com/draft/${tournament}`)
             .then(response => response.json())
             .then(data => {
                 draftTable.innerHTML = "<tr><th>Player</th></tr>";
