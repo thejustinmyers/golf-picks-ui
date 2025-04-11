@@ -39,6 +39,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     return;
                 }
 
+                const sortedEntries = Object.entries(data).sort((a, b) => a[1] - b[1]);
+
                 golfpicksTable.innerHTML = `
                     <thead>
                         <tr>
@@ -47,12 +49,20 @@ document.addEventListener("DOMContentLoaded", () => {
                         </tr>
                     </thead>
                     <tbody>
-                        ${Object.entries(data).map(([player, score]) => `
-                            <tr>
-                                <td>${player}</td>
-                                <td>${score}</td>
-                            </tr>
-                        `).join('')}
+                        ${sortedEntries.map(([player, score], index) => {
+                        let emoji = '';
+                        if (index === 0) emoji = ' 🥇';
+                        else if (index === 1) emoji = ' 🥈';
+                        else if (index === 2) emoji = ' 🥉';
+                        else if (index === sortedEntries.length - 1) emoji = ' 💩';
+
+                        return `
+                                <tr>
+                                    <td>${player}${emoji}</td>
+                                    <td>${score}</td>
+                                </tr>
+                            `;
+                    }).join('')}
                     </tbody>
                 `;
             })
