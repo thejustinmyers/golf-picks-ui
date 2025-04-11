@@ -111,14 +111,16 @@ h2 {
 }
 
 .headshot {
-    width: 3%;
+    width: 6vw;
+    max-width: 40px;
     height: auto;
     border-radius: 50%;
     vertical-align: middle;
 }
 
 .flag {
-    width: 3%;
+    width: 5vw;
+    max-width: 30px;
     height: auto;
     margin-left: 5px;
     vertical-align: middle;
