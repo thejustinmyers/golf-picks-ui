@@ -69,18 +69,28 @@ body {
     font-size: 16px;
 }
 
-/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+/* Default: scrollable table for wider content */
 .table-container {
     overflow-x: auto;
     width: 100%;
     margin: 0 auto 40px;
 }
 
-table {
-    width: 100%;
-    min-width: 900px; /* wider table minimum */
-    margin: 0 auto;
-    border-collapse: collapse;
+/* Only apply min-width to the wider tables */
+#draft-results .table-container table
+#espn-leaderboard .table-container table {
+    min-width: 900px; /* only force scroll on these tables */
+}
+
+/* Optional: keep GolfPicks table readable and mobile-friendly */
+#golfpicks-leaderboard .table-container table {
+    min-width: 0;
 }
 
 th,
