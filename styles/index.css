@@ -1,14 +1,16 @@
 body {
     background-color: white;
-    color: #045e2b; /* Masters Green */
+    color: #006400; /* Masters Green */
     font-family: Arial, sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
+    padding: 20px;
     text-align: center;
+    box-sizing: border-box;
 }
 
 h1 {
@@ -18,7 +20,10 @@ h1 {
 
 .button-container {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 15px;
+    margin-top: 20px;
 }
 
 button {
@@ -36,8 +41,15 @@ button:hover {
     background-color: #e6c200;
 }
 
+.nav-links {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
 .nav-links a {
-    display: inline-block;
     padding: 10px 20px;
     font-size: 18px;
     font-weight: bold;
@@ -52,4 +64,35 @@ button:hover {
     background-color: #ffcc00;
     color: #006847;
     transform: scale(1.1);
+}
+
+/* --- Responsive Adjustments for Mobile Devices --- */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 4rem;
+    }
+
+    button {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+    }
+
+    .nav-links a {
+        font-size: 16px;
+        padding: 8px 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 3rem;
+    }
+
+    button {
+        font-size: 0.85rem;
+    }
+
+    .nav-links a {
+        font-size: 14px;
+    }
 }
