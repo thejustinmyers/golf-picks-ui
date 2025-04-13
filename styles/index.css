@@ -54,15 +54,15 @@ button:hover {
     font-size: 18px;
     font-weight: bold;
     text-decoration: none;
-    color: #006847;
-    border: 2px solid #006847;
+    color: #006400;
+    border: 2px solid #006400;
     border-radius: 25px;
     transition: all 0.3s ease-in-out;
 }
 
 .nav-links a:hover {
     background-color: #ffcc00;
-    color: #006847;
+    color: #006400;
     transform: scale(1.1);
 }
 

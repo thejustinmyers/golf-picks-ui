@@ -11,7 +11,7 @@ body {
 /* Top Header */
 .top-header {
     width: 100%;
-    background-color: #006847;
+    background-color: #006400;
     color: white;
     padding: 15px 0;
     position: fixed;
@@ -49,7 +49,7 @@ body {
 
 .nav-links a:hover {
     background-color: #ffcc00;
-    color: #006847;
+    color: #006400;
 }
 
 /* Ensure page content does not get hidden under the fixed header */
