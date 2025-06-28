@@ -73,14 +73,19 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderGolfPicksTable(data) {
         const players = data.golfPicksScoreData;
 
-        // Clear and create table structure
+        // Safety check
+        if (!players || players.length === 0 || !players[0].picks) return;
+
+        const numPicks = players[0].picks.length;
+
+        // Clear existing table
         golfpicksTable.innerHTML = "";
 
-        // Header row 1: Player names (no emojis)
+        // Header row 1: Player names
         const headerRow1 = document.createElement("tr");
         players.forEach(player => {
             const th = document.createElement("th");
-            th.colSpan = 3;
+            th.colSpan = 2; // Only Player and Position columns now
             th.classList.add("player-name-header");
             th.textContent = player.player;
             headerRow1.appendChild(th);
@@ -90,7 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Header row 2: Labels
         const headerRow2 = document.createElement("tr");
         players.forEach(() => {
-            ["Player", "Position", "Score"].forEach(label => {
+            ["Player", "Position"].forEach(label => {
                 const th = document.createElement("th");
                 th.textContent = label;
                 headerRow2.appendChild(th);
@@ -98,8 +103,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         golfpicksTable.appendChild(headerRow2);
 
-        // Data rows (6 picks)
-        for (let i = 0; i < 6; i++) {
+        // Data rows based on number of picks
+        for (let i = 0; i < numPicks; i++) {
             const row = document.createElement("tr");
 
             players.forEach(player => {
@@ -108,18 +113,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 const positionTd = document.createElement("td");
 
                 golferTd.classList.add("golfer-cell");
-                golferTd.textContent = pick.golfer;
-                positionTd.textContent = pick.position;
+                golferTd.textContent = pick?.golfer || "";
+                positionTd.textContent = pick?.position || "";
 
                 row.appendChild(golferTd);
                 row.appendChild(positionTd);
-
-                if (i === 0) {
-                    const scoreTd = document.createElement("td");
-                    scoreTd.setAttribute("rowspan", "6");
-                    scoreTd.textContent = player.score;
-                    row.appendChild(scoreTd);
-                }
             });
 
             golfpicksTable.appendChild(row);
