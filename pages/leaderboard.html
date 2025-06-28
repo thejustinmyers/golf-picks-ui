@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Leaderboard</title>
     <link rel="stylesheet" href="../styles/leaderboard.css">
 </head>
+
 <body>
     <header class="top-header">
         <div class="header-container">
@@ -21,6 +23,10 @@
             <select id="tournament-dropdown">
                 <option value="">Loading tournaments...</option>
             </select>
+        </div>
+        <div id="podium-container">
+            <h2 id="podium-h1" style="display: none;">Podium</h2>
+            <div id="podium"></div>
         </div>
         <div id="leaderboards">
             <div id="golfpicks-leaderboard">
@@ -39,4 +45,5 @@
     </div>
     <script src="../scripts/leaderboard.js"></script>
 </body>
+
 </html>

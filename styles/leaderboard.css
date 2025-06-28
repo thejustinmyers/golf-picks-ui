@@ -83,9 +83,9 @@ table {
 }
 
 /* Only apply min-width to the wider tables */
-#draft-results .table-container table
-#espn-leaderboard .table-container table {
-    min-width: 900px; /* only force scroll on these tables */
+#draft-results .table-container table #espn-leaderboard .table-container table {
+    min-width: 900px;
+    /* only force scroll on these tables */
 }
 
 /* Optional: keep GolfPicks table readable and mobile-friendly */
@@ -172,4 +172,58 @@ h2 {
 #golfpicks-table .golfer-cell {
     font-size: 14px;
     color: #333;
+}
+
+#podium-container {
+    margin: 40px auto 60px;
+    max-width: 1000px;
+    text-align: center;
+}
+
+.bar-chart {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 20px;
+    padding-top: 20px;
+}
+
+.bar-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80px;
+    position: relative;
+}
+
+.bar-wrapper .emoji {
+    font-size: 24px;
+    margin-bottom: 5px;
+    height: 24px;
+}
+
+.bar {
+    width: 40px;
+    background-color: #006400;
+    border-radius: 6px 6px 0 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    transition: height 0.3s ease-in-out;
+    position: relative;
+}
+
+.bar .score {
+    color: white;
+    font-size: 14px;
+    padding: 4px;
+    font-weight: bold;
+}
+
+.bar-wrapper .name {
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    word-break: break-word;
 }
