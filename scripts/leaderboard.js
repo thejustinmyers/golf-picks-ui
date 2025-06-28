@@ -26,20 +26,41 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderGolfPicksTable(data) {
         const players = data.golfPicksScoreData;
 
+        // Sort by score if numeric
+        const sorted = [...players].sort((a, b) => {
+            const aScore = parseFloat(a.score);
+            const bScore = parseFloat(b.score);
+            if (isNaN(aScore)) return 1;
+            if (isNaN(bScore)) return -1;
+            return aScore - bScore;
+        });
+
+        // Assign emojis based on position
+        const emojiMap = {};
+        sorted.forEach((player, index) => {
+            let emoji = '';
+            if (index === 0) emoji = ' 🥇';
+            else if (index === 1) emoji = ' 🥈';
+            else if (index === 2) emoji = ' 🥉';
+            else if (index === sorted.length - 1) emoji = ' 💩';
+            emojiMap[player.player] = emoji;
+        });
+
         // Clear and create table structure
         golfpicksTable.innerHTML = "";
 
-        // Header row: Player names
+        // Header row 1: Player names with emoji
         const headerRow1 = document.createElement("tr");
         players.forEach(player => {
             const th = document.createElement("th");
             th.colSpan = 3;
-            th.textContent = player.player;
+            th.classList.add("player-name-header");
+            th.textContent = player.player + (emojiMap[player.player] || '');
             headerRow1.appendChild(th);
         });
         golfpicksTable.appendChild(headerRow1);
 
-        // Header row: labels
+        // Header row 2: Labels
         const headerRow2 = document.createElement("tr");
         players.forEach(() => {
             ["Player", "Position", "Score"].forEach(label => {
@@ -59,6 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const golferTd = document.createElement("td");
                 const positionTd = document.createElement("td");
 
+                golferTd.classList.add("golfer-cell");
                 golferTd.textContent = pick.golfer;
                 positionTd.textContent = pick.position;
 
@@ -76,6 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
             golfpicksTable.appendChild(row);
         }
     }
+
 
     function renderESPNLeaderboard(data) {
         const leaderboard = data.leaderboard;
