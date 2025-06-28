@@ -47,11 +47,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (sorted[2]) emojiMap[sorted[2].player] = "🥉";
         if (sorted[sorted.length - 1]) emojiMap[sorted[sorted.length - 1].player] = "💩";
 
-        const barHTML = playersData.map(player => {
+        const barHTML = sorted.map(player => {
             const rawScore = player.score;
             const isNumeric = !isNaN(parseFloat(rawScore));
             const score = isNumeric ? parseFloat(rawScore) : null;
-            const height = isNumeric ? 100 + ((maxScore - score) / scoreRange) * 100 : 60; // minimum height if "TBD"
+            const height = isNumeric ? 100 + ((maxScore - score) / scoreRange) * 100 : 60;
 
             const emoji = emojiMap[player.player] || "";
 
