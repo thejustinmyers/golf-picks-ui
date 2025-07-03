@@ -34,49 +34,79 @@ document.addEventListener("DOMContentLoaded", () => {
         // Clear existing table
         golfpicksTable.innerHTML = "";
 
-        // Header row 1: Player names
+        // Sort players by numeric score ascending (TBD treated as Infinity)
+        const sortedPlayers = [...players].sort((a, b) => {
+            const aScore = isNaN(parseFloat(a.score)) ? Infinity : parseFloat(a.score);
+            const bScore = isNaN(parseFloat(b.score)) ? Infinity : parseFloat(b.score);
+            return aScore - bScore;
+        });
+
+        // Map player names to medals or poop emojis
+        const emojiMap = {};
+        if (sortedPlayers[0]) emojiMap[sortedPlayers[0].player] = "🏅"; // 1st place
+        if (sortedPlayers[1]) emojiMap[sortedPlayers[1].player] = "🥈"; // 2nd place
+        if (sortedPlayers[2]) emojiMap[sortedPlayers[2].player] = "🥉"; // 3rd place
+        if (sortedPlayers.length > 0) emojiMap[sortedPlayers[sortedPlayers.length - 1].player] = "💩"; // last place
+
+        // Header Row 1: Player names with emojis, colspan=3
         const headerRow1 = document.createElement("tr");
         players.forEach(player => {
             const th = document.createElement("th");
-            th.colSpan = 2; // Only Player and Position columns now
+            th.colSpan = 3;
             th.classList.add("player-name-header");
-            th.textContent = player.player;
+
+            const emoji = emojiMap[player.player] || "";
+            th.textContent = `${player.player} ${emoji}`;
             headerRow1.appendChild(th);
         });
         golfpicksTable.appendChild(headerRow1);
 
-        // Header row 2: Labels
+        // Header Row 2: "Player", "Position", "Score" per player
         const headerRow2 = document.createElement("tr");
         players.forEach(() => {
-            ["Player", "Pos."].forEach(label => {
+            ["Player", "Pos.", "Score"].forEach(label => {
                 const th = document.createElement("th");
                 th.textContent = label;
-                if (label === "Pos.") {
-                    th.classList.add("position-header");
-                } else {
-                    th.classList.add("player-label-header");
-                }
+                if (label === "Pos.") th.classList.add("position-header");
+                if (label === "Player") th.classList.add("player-label-header");
+                if (label === "Score") th.classList.add("score-header");
                 headerRow2.appendChild(th);
             });
         });
         golfpicksTable.appendChild(headerRow2);
 
-        // Data rows based on number of picks
+        // Data rows, one per pick
         for (let i = 0; i < numPicks; i++) {
             const row = document.createElement("tr");
 
             players.forEach(player => {
                 const pick = player.picks[i];
-                const golferTd = document.createElement("td");
-                const positionTd = document.createElement("td");
 
-                golferTd.classList.add("golfer-cell");
-                golferTd.textContent = pick?.golfer || "";
-                positionTd.classList.add("position-cell");
-                positionTd.textContent = pick?.position || "";
+                // Player cell
+                const playerTd = document.createElement("td");
+                playerTd.classList.add("golfer-cell");
+                playerTd.textContent = pick?.golfer || "";
+                row.appendChild(playerTd);
 
-                row.appendChild(golferTd);
-                row.appendChild(positionTd);
+                // Position cell (remove leading 'T' if present to match sample)
+                const posTd = document.createElement("td");
+                posTd.classList.add("position-cell");
+                let pos = pick?.position || "";
+                posTd.textContent = pos;
+                row.appendChild(posTd);
+
+                // Score cell: only on first row, rowspan = number of picks
+                if (i === 0) {
+                    const scoreTd = document.createElement("td");
+                    scoreTd.classList.add("score-cell");
+
+                    // Show TBD if score not numeric
+                    const numericScore = parseFloat(player.score);
+                    scoreTd.textContent = isNaN(numericScore) ? "TBD" : player.score;
+
+                    scoreTd.rowSpan = numPicks;
+                    row.appendChild(scoreTd);
+                }
             });
 
             golfpicksTable.appendChild(row);
