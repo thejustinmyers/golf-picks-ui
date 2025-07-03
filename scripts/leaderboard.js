@@ -34,91 +34,54 @@ document.addEventListener("DOMContentLoaded", () => {
         // Clear existing table
         golfpicksTable.innerHTML = "";
 
-        // Sort players by numeric score ascending (TBD treated as Infinity)
-        const sortedPlayers = [...players].sort((a, b) => {
-            const aScore = isNaN(parseFloat(a.score)) ? Infinity : parseFloat(a.score);
-            const bScore = isNaN(parseFloat(b.score)) ? Infinity : parseFloat(b.score);
-            return aScore - bScore;
-        });
-
-        // Map player names to medals or poop emojis
-        const emojiMap = {};
-        if (sortedPlayers[0]) emojiMap[sortedPlayers[0].player] = "🏅"; // 1st place
-        if (sortedPlayers[1]) emojiMap[sortedPlayers[1].player] = "🥈"; // 2nd place
-        if (sortedPlayers[2]) emojiMap[sortedPlayers[2].player] = "🥉"; // 3rd place
-        if (sortedPlayers.length > 0) emojiMap[sortedPlayers[sortedPlayers.length - 1].player] = "💩"; // last place
-
-        // Header Row 1: Player names with emojis, colspan=2 (Player + Pos.)
+        // Header row 1: Player names
         const headerRow1 = document.createElement("tr");
         players.forEach(player => {
             const th = document.createElement("th");
-            th.colSpan = 2; // only Player + Pos. columns now
+            th.colSpan = 2; // Only Player and Position columns now
             th.classList.add("player-name-header");
-
-            const emoji = emojiMap[player.player] || "";
-            th.textContent = `${player.player} ${emoji}`;
+            th.textContent = player.player;
             headerRow1.appendChild(th);
         });
         golfpicksTable.appendChild(headerRow1);
 
-        // Header Row 2: "Player", "Pos." repeated per player
+        // Header row 2: Labels
         const headerRow2 = document.createElement("tr");
         players.forEach(() => {
             ["Player", "Pos."].forEach(label => {
                 const th = document.createElement("th");
                 th.textContent = label;
-                if (label === "Pos.") th.classList.add("position-header");
-                if (label === "Player") th.classList.add("player-label-header");
+                if (label === "Pos.") {
+                    th.classList.add("position-header");
+                } else {
+                    th.classList.add("player-label-header");
+                }
                 headerRow2.appendChild(th);
             });
         });
         golfpicksTable.appendChild(headerRow2);
 
-        // Data rows for picks (numPicks rows)
+        // Data rows based on number of picks
         for (let i = 0; i < numPicks; i++) {
             const row = document.createElement("tr");
 
             players.forEach(player => {
                 const pick = player.picks[i];
+                const golferTd = document.createElement("td");
+                const positionTd = document.createElement("td");
 
-                // Player cell: golfer name
-                const playerTd = document.createElement("td");
-                playerTd.classList.add("golfer-cell");
-                playerTd.textContent = pick?.golfer || "";
-                row.appendChild(playerTd);
+                golferTd.classList.add("golfer-cell");
+                golferTd.textContent = pick?.golfer || "";
+                positionTd.classList.add("position-cell");
+                positionTd.textContent = pick?.position || "";
 
-                // Position cell (show as-is)
-                const posTd = document.createElement("td");
-                posTd.classList.add("position-cell");
-                posTd.textContent = pick?.position || "";
-                row.appendChild(posTd);
+                row.appendChild(golferTd);
+                row.appendChild(positionTd);
             });
 
             golfpicksTable.appendChild(row);
         }
-
-        // Extra row for scores below all picks
-        const scoreRow = document.createElement("tr");
-
-        players.forEach(player => {
-            // Player cell: label "Score"
-            const playerTd = document.createElement("td");
-            playerTd.classList.add("score-label-cell"); // add class here
-            playerTd.textContent = "Score";
-            scoreRow.appendChild(playerTd);
-
-            // Position cell: actual score or TBD
-            const posTd = document.createElement("td");
-            posTd.classList.add("score-value-cell"); // add class here
-            const numericScore = parseFloat(player.score);
-            posTd.textContent = isNaN(numericScore) ? "TBD" : player.score;
-            scoreRow.appendChild(posTd);
-        });
-
-        golfpicksTable.appendChild(scoreRow);
-
     }
-
 
 
     function renderESPNLeaderboard(data) {
