@@ -112,7 +112,7 @@ tr:nth-child(even) {
 }
 
 /* === GolfPicks Table === */
-#golfpicks-leaderboard .table-container {
+#golfpicks-data .table-container {
     overflow-x: auto;
     width: 100%;
     margin: 0 auto 40px;

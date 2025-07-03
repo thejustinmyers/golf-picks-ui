@@ -2,8 +2,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const tournamentDropdown = document.getElementById("tournament-dropdown");
     const golfpicksTable = document.getElementById("golfpicks-table");
     const espnTable = document.getElementById("espn-table");
-    const golfPicksLeaderboardH1 = document.getElementById("golfpicks-leaderboard-h1");
+    const golfPicksDataH1 = document.getElementById("golfpicks-data-h1");
     const espnLeaderboardH1 = document.getElementById("espn-leaderboard-h1");
+    const golfPicksLeaderboardTable = document.getElementById("leaderboard-table");
+    const golfPicksLeaderboardH1 = document.getElementById("leaderboard-h1");
 
     function loadTournaments() {
         fetch("http://127.0.0.1:8000/tournaments")
@@ -24,6 +26,53 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function renderGolfPicksLeaderboard(data) {
+        const players = data.golfPicksScoreData;
+
+        golfPicksLeaderboardTable.innerHTML = "";
+
+        if (!players || players.length === 0) {
+            const row = document.createElement("tr");
+            row.innerHTML = "<td colspan='2'>No draft found.</td>";
+            golfPicksLeaderboardTable.appendChild(row);
+            return;
+        }
+
+        // Sort by numeric score (ascending)
+        const sortedPlayers = [...players].sort((a, b) => parseFloat(a.score) - parseFloat(b.score));
+
+        // Table headers
+        const headerRow = document.createElement("tr");
+        ["Player", "Score"].forEach(text => {
+            const th = document.createElement("th");
+            th.textContent = text;
+            headerRow.appendChild(th);
+        });
+        golfPicksLeaderboardTable.appendChild(headerRow);
+
+        // Table rows
+        sortedPlayers.forEach((player, index) => {
+            const row = document.createElement("tr");
+            let emoji = "";
+
+            if (index === 0) emoji = " 🥇";
+            else if (index === 1) emoji = " 🥈";
+            else if (index === 2) emoji = " 🥉";
+            else if (index === sortedPlayers.length - 1) emoji = " 💩";
+
+            const nameTd = document.createElement("td");
+            nameTd.textContent = `${player.player}${emoji}`;
+
+            const scoreTd = document.createElement("td");
+            scoreTd.textContent = player.score;
+
+            row.appendChild(nameTd);
+            row.appendChild(scoreTd);
+            golfPicksLeaderboardTable.appendChild(row);
+        });
+    }
+
+
+    function renderGolfPicksDataTable(data) {
         const players = data.golfPicksScoreData;
 
         // Safety check
@@ -117,16 +166,21 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(response => response.json())
             .then(data => {
                 golfPicksLeaderboardH1.style.display = "inline-block";
+                golfPicksDataH1.style.display = "inline-block";
                 espnLeaderboardH1.style.display = "inline-block";
+
                 renderGolfPicksLeaderboard(data);
+                renderGolfPicksDataTable(data);
                 renderESPNLeaderboard(data);
             })
             .catch(error => {
                 console.error("Error fetching leaderboard data:", error);
+                golfPicksLeaderboardTable.innerHTML = "<tr><td colspan='9'>Failed to load golf picks leaderboard.</td></tr>";
                 golfpicksTable.innerHTML = "<tr><td colspan='9'>Failed to load golf picks data.</td></tr>";
                 espnTable.innerHTML = "<tr><td colspan='4'>Failed to load ESPN leaderboard data.</td></tr>";
             });
     }
+
 
     tournamentDropdown.addEventListener("change", () => {
         const selectedTournament = tournamentDropdown.value;
