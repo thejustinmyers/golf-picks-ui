@@ -98,6 +98,11 @@ document.addEventListener("DOMContentLoaded", () => {
             ["Player", "Position"].forEach(label => {
                 const th = document.createElement("th");
                 th.textContent = label;
+                if (label === "Position") {
+                    th.classList.add("position-header");
+                } else {
+                    th.classList.add("player-label-header");
+                }
                 headerRow2.appendChild(th);
             });
         });
@@ -114,6 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 golferTd.classList.add("golfer-cell");
                 golferTd.textContent = pick?.golfer || "";
+                positionTd.classList.add("position-cell");
                 positionTd.textContent = pick?.position || "";
 
                 row.appendChild(golferTd);

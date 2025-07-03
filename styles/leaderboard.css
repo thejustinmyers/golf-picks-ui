@@ -95,7 +95,7 @@ table {
 
 th,
 td {
-    border: 1px solid #006400;
+    border: 1px solid #000000;
     padding: 10px;
     text-align: left;
 }
@@ -163,16 +163,90 @@ h2 {
     }
 }
 
-#golfpicks-table .player-name-header {
-    text-align: center;
-    font-weight: bold;
-    font-size: 16px;
+/* === Shared Table Base Style (matches ESPN) === */
+#golfpicks-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #000000; /* Deep green border */
+    table-layout: fixed;
 }
 
-#golfpicks-table .golfer-cell {
-    font-size: 14px;
-    color: #333;
+/* === Player Name Header Row === */
+#golfpicks-table .player-name-header {
+    background-color: #006400; /* Dark green like tee box */
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+    border: 1px solid #000000;
+    padding: 10px;
 }
+
+/* === golfpicks-table 2nd header === */
+#golfpicks-table tr:nth-child(2) th {
+    background-color: #228B22; /* Fairway green */
+    font-size: 14px;
+    font-weight: 550;
+    text-align: center;
+    border: 1px solid #000000;
+    padding: 6px;
+}
+
+/* === Table Body Cells === */
+#golfpicks-table td {
+    border: 1px solid #000000;
+    padding: 10px;
+    text-align: center;
+    background-color: #ffffff;
+    font-size: 14px;
+    word-break: break-word;
+}
+
+/* === Alternating Row Colors (like ESPN) === */
+#golfpicks-table tr:nth-child(even) td {
+    background-color: #F5F5F5;
+}
+
+/* === Golfer Cell (smaller name text, left-aligned) === */
+#golfpicks-table .golfer-cell {
+    font-size: 13px;
+    font-weight: normal;
+    text-align: left;
+    padding-left: 6px;
+    color: #006400;
+}
+
+/* === Position Cell === */
+#golfpicks-table td.position-cell {
+    font-size: 13px;
+    font-weight: normal;
+    color: #333;
+    text-align: center;
+}
+
+/* === Match Widths: each pair under a player gets equal space === */
+#golfpicks-table th,
+#golfpicks-table td {
+    width: 50%; /* each "Player" and "Position" cell per player */
+}
+
+/* === Responsive adjustments === */
+@media (max-width: 768px) {
+    #golfpicks-table td,
+    #golfpicks-table th {
+        font-size: 13px;
+        padding: 6px;
+    }
+
+    #golfpicks-table .golfer-cell {
+        font-size: 12px;
+    }
+
+    #golfpicks-table td.position-cell {
+        font-size: 12px;
+    }
+}
+
 
 .bar-chart {
     display: flex;
