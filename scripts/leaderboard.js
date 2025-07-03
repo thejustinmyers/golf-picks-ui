@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const golfpicksTable = document.getElementById("golfpicks-table");
     const espnTable = document.getElementById("espn-table");
     const golfPicksLeaderboardH1 = document.getElementById("golfpicks-leaderboard-h1");
-    const podiumH1 = document.getElementById("podium-h1");
     const espnLeaderboardH1 = document.getElementById("espn-leaderboard-h1");
 
     function loadTournaments() {
@@ -24,53 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     }
 
-    function renderPodium(playersData) {
-        const podiumContainer = document.getElementById("podium");
-        podiumContainer.innerHTML = "";
-
-        // Filter out "TBD" or non-numeric scores for height calculation
-        const numericPlayers = playersData.filter(p => !isNaN(parseFloat(p.score)));
-
-        // Sort by score (lower is better)
-        const sorted = [...numericPlayers].sort((a, b) => parseFloat(a.score) - parseFloat(b.score));
-
-        // Get score range
-        const scores = numericPlayers.map(p => parseFloat(p.score));
-        const maxScore = Math.max(...scores);
-        const minScore = Math.min(...scores);
-        const scoreRange = maxScore - minScore || 1;
-
-        // Assign emojis
-        const emojiMap = {};
-        if (sorted[0]) emojiMap[sorted[0].player] = "🥇";
-        if (sorted[1]) emojiMap[sorted[1].player] = "🥈";
-        if (sorted[2]) emojiMap[sorted[2].player] = "🥉";
-        if (sorted[sorted.length - 1]) emojiMap[sorted[sorted.length - 1].player] = "💩";
-
-        const barHTML = sorted.map(player => {
-            const rawScore = player.score;
-            const isNumeric = !isNaN(parseFloat(rawScore));
-            const score = isNumeric ? parseFloat(rawScore) : null;
-            const height = isNumeric ? 100 + ((maxScore - score) / scoreRange) * 100 : 60;
-
-            const emoji = emojiMap[player.player] || "";
-
-            return `
-            <div class="bar-wrapper">
-                <div class="emoji">${emoji}</div>
-                <div class="bar" style="height: ${height}px;">
-                    <span class="score">${rawScore}</span>
-                </div>
-                <div class="name">${player.player}</div>
-            </div>
-        `;
-        }).join("");
-
-        podiumContainer.innerHTML = `<div class="bar-chart">${barHTML}</div>`;
-    }
-
-
-    function renderGolfPicksTable(data) {
+    function renderGolfPicksLeaderboard(data) {
         const players = data.golfPicksScoreData;
 
         // Safety check
@@ -163,11 +116,9 @@ document.addEventListener("DOMContentLoaded", () => {
         fetch(`http://127.0.0.1:8000/scores/${tournament}`)
             .then(response => response.json())
             .then(data => {
-                podiumH1.style.display = "inline-block";
                 golfPicksLeaderboardH1.style.display = "inline-block";
                 espnLeaderboardH1.style.display = "inline-block";
-                renderPodium(data.golfPicksScoreData);
-                renderGolfPicksTable(data);
+                renderGolfPicksLeaderboard(data);
                 renderESPNLeaderboard(data);
             })
             .catch(error => {
