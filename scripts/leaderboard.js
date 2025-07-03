@@ -135,15 +135,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function renderESPNLeaderboard(data) {
         const leaderboard = data.leaderboard;
-
-        espnTable.innerHTML = "<tr><th>Position</th><th>Player</th><th>Score</th><th>Status</th></tr>";
+        const placeholder = document.getElementById("espn-placeholder");
+        placeholder.style.display = "none";
 
         if (!leaderboard || Object.keys(leaderboard).length === 0) {
-            const row = document.createElement("tr");
-            row.innerHTML = "<td colspan='4'>The tournament has not started yet.</td>";
-            espnTable.appendChild(row);
+            espnTable.style.display = "none";
+
+            placeholder.innerHTML = `
+            <img 
+                src="../images/pagenotfound.png" 
+                alt="Tournament not started" 
+                style="display: block; margin: 10px auto; max-width: 300px; width: 100%;">
+        `;
+
+            // Show the placeholder image
+            placeholder.style.display = "block";
             return;
         }
+
+        espnTable.style.display = "table";
+        espnTable.innerHTML = "<tr><th>Position</th><th>Player</th><th>Score</th><th>Status</th></tr>";
+        placeholder.style.display = "none";
 
         Object.entries(leaderboard).forEach(([playerName, player]) => {
             const row = document.createElement("tr");
