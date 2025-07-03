@@ -48,11 +48,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (sortedPlayers[2]) emojiMap[sortedPlayers[2].player] = "🥉"; // 3rd place
         if (sortedPlayers.length > 0) emojiMap[sortedPlayers[sortedPlayers.length - 1].player] = "💩"; // last place
 
-        // Header Row 1: Player names with emojis, colspan=3
+        // Header Row 1: Player names with emojis, colspan=2 (Player + Pos.)
         const headerRow1 = document.createElement("tr");
         players.forEach(player => {
             const th = document.createElement("th");
-            th.colSpan = 3;
+            th.colSpan = 2; // only Player + Pos. columns now
             th.classList.add("player-name-header");
 
             const emoji = emojiMap[player.player] || "";
@@ -61,57 +61,64 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         golfpicksTable.appendChild(headerRow1);
 
-        // Header Row 2: "Player", "Position", "Score" per player
+        // Header Row 2: "Player", "Pos." repeated per player
         const headerRow2 = document.createElement("tr");
         players.forEach(() => {
-            ["Player", "Pos.", "Score"].forEach(label => {
+            ["Player", "Pos."].forEach(label => {
                 const th = document.createElement("th");
                 th.textContent = label;
                 if (label === "Pos.") th.classList.add("position-header");
                 if (label === "Player") th.classList.add("player-label-header");
-                if (label === "Score") th.classList.add("score-header");
                 headerRow2.appendChild(th);
             });
         });
         golfpicksTable.appendChild(headerRow2);
 
-        // Data rows, one per pick
+        // Data rows for picks (numPicks rows)
         for (let i = 0; i < numPicks; i++) {
             const row = document.createElement("tr");
 
             players.forEach(player => {
                 const pick = player.picks[i];
 
-                // Player cell
+                // Player cell: golfer name
                 const playerTd = document.createElement("td");
                 playerTd.classList.add("golfer-cell");
                 playerTd.textContent = pick?.golfer || "";
                 row.appendChild(playerTd);
 
-                // Position cell (remove leading 'T' if present to match sample)
+                // Position cell (show as-is)
                 const posTd = document.createElement("td");
                 posTd.classList.add("position-cell");
-                let pos = pick?.position || "";
-                posTd.textContent = pos;
+                posTd.textContent = pick?.position || "";
                 row.appendChild(posTd);
-
-                // Score cell: only on first row, rowspan = number of picks
-                if (i === 0) {
-                    const scoreTd = document.createElement("td");
-                    scoreTd.classList.add("score-cell");
-
-                    // Show TBD if score not numeric
-                    const numericScore = parseFloat(player.score);
-                    scoreTd.textContent = isNaN(numericScore) ? "TBD" : player.score;
-
-                    scoreTd.rowSpan = numPicks;
-                    row.appendChild(scoreTd);
-                }
             });
 
             golfpicksTable.appendChild(row);
         }
+
+        // Extra row for scores below all picks
+        const scoreRow = document.createElement("tr");
+
+        players.forEach(player => {
+            // Player cell: label "Score"
+            const playerTd = document.createElement("td");
+            playerTd.classList.add("score-label-cell"); // add class here
+            playerTd.textContent = "Score";
+            scoreRow.appendChild(playerTd);
+
+            // Position cell: actual score or TBD
+            const posTd = document.createElement("td");
+            posTd.classList.add("score-value-cell"); // add class here
+            const numericScore = parseFloat(player.score);
+            posTd.textContent = isNaN(numericScore) ? "TBD" : player.score;
+            scoreRow.appendChild(posTd);
+        });
+
+        golfpicksTable.appendChild(scoreRow);
+
     }
+
 
 
     function renderESPNLeaderboard(data) {

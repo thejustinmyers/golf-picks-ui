@@ -144,6 +144,18 @@ tr:nth-child(even) {
     padding: 6px;
 }
 
+#golfpicks-table .score-label-cell,
+#golfpicks-table .score-value-cell {
+    background-color: #006400; /* same as header row 2 */
+    font-size: 14px;
+    font-weight: 550;
+    text-align: center;
+    border: 1px solid #000000;
+    padding: 6px;
+    color: white; /* same as header */
+    white-space: nowrap;
+}
+
 #golfpicks-table td {
     border: 1px solid #000000;
     padding: 10px;
