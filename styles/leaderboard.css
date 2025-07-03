@@ -1,4 +1,4 @@
-/* General Styles */
+/* === Global Styles === */
 body {
     font-family: Arial, sans-serif;
     background-color: #FFFFFF;
@@ -8,7 +8,7 @@ body {
     text-align: center;
 }
 
-/* Top Header */
+/* === Top Header === */
 .top-header {
     width: 100%;
     background-color: #006400;
@@ -52,14 +52,14 @@ body {
     color: #006400;
 }
 
-/* Ensure page content does not get hidden under the fixed header */
+/* === Layout Container === */
 .container {
     width: 90%;
     margin: 80px auto 0;
     padding: 20px;
 }
 
-/* Tournament Selection */
+/* === Tournament Dropdown === */
 .tournament-selection {
     margin: 20px 0;
 }
@@ -69,28 +69,19 @@ body {
     font-size: 16px;
 }
 
+/* === Section Headings === */
+h2 {
+    color: #006400;
+    border-bottom: 2px solid #FFD700;
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+/* === Table Base Styles === */
 table {
     width: 100%;
     border-collapse: collapse;
     margin: 0 auto;
-}
-
-/* Default: scrollable table for wider content */
-.table-container {
-    overflow-x: auto;
-    width: 100%;
-    margin: 0 auto 40px;
-}
-
-/* Only apply min-width to the wider tables */
-#draft-results .table-container table #espn-leaderboard .table-container table {
-    min-width: 900px;
-    /* only force scroll on these tables */
-}
-
-/* Optional: keep GolfPicks table readable and mobile-friendly */
-#golfpicks-leaderboard .table-container table {
-    min-width: 0;
 }
 
 th,
@@ -109,15 +100,138 @@ tr:nth-child(even) {
     background-color: #F5F5F5;
 }
 
-/* Section Headings */
-h2 {
-    color: #006400;
-    border-bottom: 2px solid #FFD700;
-    display: inline-block;
-    padding-bottom: 5px;
+.table-container {
+    overflow-x: auto;
+    width: 100%;
+    margin: 0 auto 40px;
 }
 
-/* Responsive Images */
+/* === ESPN Leaderboard Table === */
+#espn-leaderboard .table-container table {
+    min-width: 900px;
+}
+
+/* === GolfPicks Table === */
+#golfpicks-leaderboard .table-container {
+    overflow-x: auto;
+    width: 100%;
+    margin: 0 auto 40px;
+}
+
+#golfpicks-table {
+    width: max-content;
+    min-width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #000000;
+}
+
+#golfpicks-table .player-name-header {
+    background-color: #006400;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+    border: 1px solid #000000;
+    padding: 10px;
+}
+
+#golfpicks-table tr:nth-child(2) th {
+    background-color: #228B22;
+    font-size: 14px;
+    font-weight: 550;
+    text-align: center;
+    border: 1px solid #000000;
+    padding: 6px;
+}
+
+#golfpicks-table td {
+    border: 1px solid #000000;
+    padding: 10px;
+    text-align: center;
+    background-color: #ffffff;
+    font-size: 14px;
+    word-break: break-word;
+}
+
+#golfpicks-table tr:nth-child(even) td {
+    background-color: #F5F5F5;
+}
+
+#golfpicks-table .golfer-cell {
+    font-size: 13px;
+    text-align: left;
+    padding-left: 6px;
+    color: #006400;
+}
+
+#golfpicks-table .position-cell {
+    font-size: 13px;
+    color: #333;
+    text-align: center;
+}
+
+#golfpicks-table th,
+#golfpicks-table td {
+    width: auto;
+    white-space: nowrap;
+    /* prevent text wrapping */
+}
+
+
+/* === Podium Chart === */
+.bar-chart {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 2px;
+    padding-top: 20px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.bar-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 55px;
+    margin: 0;
+}
+
+.bar-wrapper .emoji {
+    font-size: 20px;
+    margin-bottom: 4px;
+    height: 24px;
+    line-height: 1;
+}
+
+.bar {
+    width: 36px;
+    background-color: #006400;
+    border-radius: 6px 6px 0 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    position: relative;
+    transition: height 0.3s ease-in-out;
+}
+
+.bar .score {
+    color: white;
+    font-size: 12px;
+    padding: 4px;
+    font-weight: bold;
+}
+
+.bar-wrapper .name {
+    margin-top: 6px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    word-break: break-word;
+}
+
+/* === Images === */
 .headshot {
     width: 6vw;
     max-width: 40px;
@@ -134,7 +248,7 @@ h2 {
     vertical-align: middle;
 }
 
-/* Responsive Adjustments */
+/* === Responsive Styles === */
 @media (max-width: 768px) {
 
     th,
@@ -161,142 +275,22 @@ h2 {
         font-size: 16px;
         padding: 8px 16px;
     }
-}
 
-/* === Shared Table Base Style (matches ESPN) === */
-#golfpicks-table {
-    width: 100%;
-    border-collapse: collapse;
-    border: 1px solid #000000; /* Deep green border */
-    table-layout: fixed;
-}
-
-/* === Player Name Header Row === */
-#golfpicks-table .player-name-header {
-    background-color: #006400; /* Dark green like tee box */
-    color: #ffffff;
-    font-size: 15px;
-    font-weight: bold;
-    text-align: center;
-    border: 1px solid #000000;
-    padding: 10px;
-}
-
-/* === golfpicks-table 2nd header === */
-#golfpicks-table tr:nth-child(2) th {
-    background-color: #228B22; /* Fairway green */
-    font-size: 14px;
-    font-weight: 550;
-    text-align: center;
-    border: 1px solid #000000;
-    padding: 6px;
-}
-
-/* === Table Body Cells === */
-#golfpicks-table td {
-    border: 1px solid #000000;
-    padding: 10px;
-    text-align: center;
-    background-color: #ffffff;
-    font-size: 14px;
-    word-break: break-word;
-}
-
-/* === Alternating Row Colors (like ESPN) === */
-#golfpicks-table tr:nth-child(even) td {
-    background-color: #F5F5F5;
-}
-
-/* === Golfer Cell (smaller name text, left-aligned) === */
-#golfpicks-table .golfer-cell {
-    font-size: 13px;
-    font-weight: normal;
-    text-align: left;
-    padding-left: 6px;
-    color: #006400;
-}
-
-/* === Position Cell === */
-#golfpicks-table td.position-cell {
-    font-size: 13px;
-    font-weight: normal;
-    color: #333;
-    text-align: center;
-}
-
-/* === Match Widths: each pair under a player gets equal space === */
-#golfpicks-table th,
-#golfpicks-table td {
-    width: 50%; /* each "Player" and "Position" cell per player */
-}
-
-/* === Responsive adjustments === */
-@media (max-width: 768px) {
     #golfpicks-table td,
     #golfpicks-table th {
         font-size: 13px;
         padding: 6px;
     }
 
+    #golfpicks-table .player-name-header {
+        font-size: 13px;
+    }
+
     #golfpicks-table .golfer-cell {
         font-size: 12px;
     }
 
-    #golfpicks-table td.position-cell {
+    #golfpicks-table .position-cell {
         font-size: 12px;
     }
-}
-
-
-.bar-chart {
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    gap: 2px; /* was 20px — now closer together */
-    padding-top: 20px;
-    flex-wrap: wrap;
-    margin-top: 20px;
-}
-
-.bar-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 55px; /* adjust as needed */
-    padding: 0;
-    margin: 0;
-}
-
-.bar-wrapper .emoji {
-    font-size: 20px;
-    margin-bottom: 4px;
-    height: 24px;
-    line-height: 1;
-}
-
-.bar {
-    width: 36px; /* was 40px — slightly narrower */
-    background-color: #006400;
-    border-radius: 6px 6px 0 0;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    position: relative;
-    transition: height 0.3s ease-in-out;
-}
-
-.bar .score {
-    color: white;
-    font-size: 12px;
-    padding: 4px;
-    font-weight: bold;
-}
-
-.bar-wrapper .name {
-    margin-top: 6px;
-    font-size: 13px;
-    font-weight: bold;
-    color: #333;
-    text-align: center;
-    word-break: break-word;
 }

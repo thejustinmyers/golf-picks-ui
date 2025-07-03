@@ -95,10 +95,10 @@ document.addEventListener("DOMContentLoaded", () => {
         // Header row 2: Labels
         const headerRow2 = document.createElement("tr");
         players.forEach(() => {
-            ["Player", "Position"].forEach(label => {
+            ["Player", "Pos."].forEach(label => {
                 const th = document.createElement("th");
                 th.textContent = label;
-                if (label === "Position") {
+                if (label === "Pos.") {
                     th.classList.add("position-header");
                 } else {
                     th.classList.add("player-label-header");
