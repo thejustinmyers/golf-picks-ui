@@ -2,10 +2,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const tournamentDropdown = document.getElementById("tournament-dropdown");
     const golfpicksTable = document.getElementById("golfpicks-table");
     const espnTable = document.getElementById("espn-table");
-    const draftTable = document.getElementById("draft-table");
-    const golfPicksLeaderboardH1 = document.getElementById("golfpicks-leaderboard-h1");
-    const draftResultsH1 = document.getElementById("draft-results-h1");
+    const golfPicksDataH1 = document.getElementById("golfpicks-data-h1");
     const espnLeaderboardH1 = document.getElementById("espn-leaderboard-h1");
+    const golfPicksLeaderboardTable = document.getElementById("leaderboard-table");
+    const golfPicksLeaderboardH1 = document.getElementById("leaderboard-h1");
 
     function loadTournaments() {
         fetch("https://m7486etxhi.execute-api.us-east-1.amazonaws.com/tournaments")
@@ -25,140 +25,177 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     }
 
-    function loadGolfPicksLeaderboard(tournament) {
+    function renderGolfPicksLeaderboard(data) {
+        golfPicksLeaderboardTable.innerHTML = "";
+
+        const players = data.golfPicksScoreData;
+        if (!players || players.length === 0) {
+            return;
+        }
+
+        golfPicksLeaderboardH1.style.display = "inline-block";
+
+        // Sort by numeric score (ascending)
+        const sortedPlayers = [...players].sort((a, b) => parseFloat(a.score) - parseFloat(b.score));
+
+        // Table headers
+        const headerRow = document.createElement("tr");
+        ["Player", "Score"].forEach(text => {
+            const th = document.createElement("th");
+            th.textContent = text;
+            headerRow.appendChild(th);
+        });
+        golfPicksLeaderboardTable.appendChild(headerRow);
+
+        // Table rows
+        sortedPlayers.forEach((player, index) => {
+            const row = document.createElement("tr");
+            let emoji = "";
+
+            if (index === 0) emoji = " 🥇";
+            else if (index === 1) emoji = " 🥈";
+            else if (index === 2) emoji = " 🥉";
+            else if (index === sortedPlayers.length - 1) emoji = " 💩";
+
+            const nameTd = document.createElement("td");
+            nameTd.textContent = `${player.player}${emoji}`;
+
+            const scoreTd = document.createElement("td");
+            scoreTd.textContent = player.score;
+
+            row.appendChild(nameTd);
+            row.appendChild(scoreTd);
+            golfPicksLeaderboardTable.appendChild(row);
+        });
+    }
+
+
+    function renderGolfPicksDataTable(data) {
+        golfpicksTable.innerHTML = "";
+
+        const players = data.golfPicksScoreData;
+        if (!players || players.length === 0 || !players[0].picks) {
+            return;
+        }
+
+        golfPicksDataH1.style.display = "inline-block";
+        const numPicks = players[0].picks.length;
+
+        // Header row 1: Player names
+        const headerRow1 = document.createElement("tr");
+        players.forEach(player => {
+            const th = document.createElement("th");
+            th.colSpan = 2; // Only Player and Position columns now
+            th.classList.add("player-name-header");
+            th.textContent = player.player;
+            headerRow1.appendChild(th);
+        });
+        golfpicksTable.appendChild(headerRow1);
+
+        // Header row 2: Labels
+        const headerRow2 = document.createElement("tr");
+        players.forEach(() => {
+            ["Player", "Pos."].forEach(label => {
+                const th = document.createElement("th");
+                th.textContent = label;
+                if (label === "Pos.") {
+                    th.classList.add("position-header");
+                } else {
+                    th.classList.add("player-label-header");
+                }
+                headerRow2.appendChild(th);
+            });
+        });
+        golfpicksTable.appendChild(headerRow2);
+
+        // Data rows based on number of picks
+        for (let i = 0; i < numPicks; i++) {
+            const row = document.createElement("tr");
+
+            players.forEach(player => {
+                const pick = player.picks[i];
+                const golferTd = document.createElement("td");
+                const positionTd = document.createElement("td");
+
+                golferTd.classList.add("golfer-cell");
+                golferTd.textContent = pick?.golfer || "";
+                positionTd.classList.add("position-cell");
+                positionTd.textContent = pick?.position || "";
+
+                row.appendChild(golferTd);
+                row.appendChild(positionTd);
+            });
+
+            golfpicksTable.appendChild(row);
+        }
+    }
+
+
+    function renderESPNLeaderboard(data) {
+        const leaderboard = data.leaderboard;
+        const placeholder = document.getElementById("espn-placeholder");
+        placeholder.style.display = "none";
+        espnLeaderboardH1.style.display = "inline-block";
+
+        if (!leaderboard || Object.keys(leaderboard).length === 0) {
+            espnTable.style.display = "none";
+
+            placeholder.innerHTML = `
+            <img 
+                src="../images/pagenotfound.png" 
+                alt="Tournament not started" 
+                style="display: block; margin: 10px auto; max-width: 300px; width: 100%;">
+        `;
+
+            // Show the placeholder image
+            placeholder.style.display = "block";
+            return;
+        }
+
+        espnTable.style.display = "table";
+        espnTable.innerHTML = "<tr><th>Position</th><th>Player</th><th>Score</th><th>Status</th></tr>";
+        placeholder.style.display = "none";
+
+        Object.entries(leaderboard).forEach(([playerName, player]) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${player.position}</td>
+                <td>
+                    <img class="headshot" src="${player.headshot}" alt="${playerName}"> 
+                    <img class="flag" src="${player.flag}" alt="Flag"> 
+                    ${playerName}
+                </td>
+                <td>${player.score}</td>
+                <td>${player.status}</td>
+            `;
+            espnTable.appendChild(row);
+        });
+    }
+
+    function fetchBackendData(tournament) {
         fetch(`https://m7486etxhi.execute-api.us-east-1.amazonaws.com/scores/${tournament}`)
             .then(response => response.json())
             .then(data => {
-
-                golfpicksTable.innerHTML = "<tr><th>Player</th><th>Score</th></tr>";
-
-                if (Object.keys(data).length === 0) {
-                    const row = document.createElement("tr");
-                    row.innerHTML = "<td colspan='4'>No draft found.</td>";
-                    golfpicksTable.appendChild(row);
-                    return;
-                }
-
-                const sortedEntries = Object.entries(data).sort((a, b) => a[1] - b[1]);
-
-                golfpicksTable.innerHTML = `
-                    <thead>
-                        <tr>
-                            <th>Player</th>
-                            <th>Score</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${sortedEntries.map(([player, score], index) => {
-                        let emoji = '';
-                        if (index === 0) emoji = ' 🥇';
-                        else if (index === 1) emoji = ' 🥈';
-                        else if (index === 2) emoji = ' 🥉';
-                        else if (index === sortedEntries.length - 1) emoji = ' 💩';
-
-                        return `
-                                <tr>
-                                    <td>${player}${emoji}</td>
-                                    <td>${score}</td>
-                                </tr>
-                            `;
-                    }).join('')}
-                    </tbody>
-                `;
+                golfPicksLeaderboardH1.style.display = "none";
+                golfPicksDataH1.style.display = "none";
+                espnLeaderboardH1.style.display = "none";
+                renderGolfPicksLeaderboard(data);
+                renderGolfPicksDataTable(data);
+                renderESPNLeaderboard(data);
             })
             .catch(error => {
-                console.error("Error fetching GolfPicks leaderboard:", error);
-                golfpicksTable.innerHTML = '<tr><td colspan="2">Failed to load GolfPicks leaderboard</td></tr>';
+                console.error("Error fetching leaderboard data:", error);
+                golfPicksLeaderboardTable.innerHTML = "<tr><td colspan='9'>Failed to load golf picks leaderboard.</td></tr>";
+                golfpicksTable.innerHTML = "<tr><td colspan='9'>Failed to load golf picks data.</td></tr>";
+                espnTable.innerHTML = "<tr><td colspan='4'>Failed to load ESPN leaderboard data.</td></tr>";
             });
     }
-
-    function loadESPNLeaderboard(tournament) {
-        fetch(`https://m7486etxhi.execute-api.us-east-1.amazonaws.com/leaderboard/${tournament}`)
-            .then(response => response.json())
-            .then(data => {
-                espnTable.innerHTML = "<tr><th>Position</th><th>Player</th><th>Score</th><th>Status</th></tr>";
-
-                if (Object.keys(data).length === 0) {
-                    const row = document.createElement("tr");
-                    row.innerHTML = "<td colspan='4'>The tournament has not started yet.</td>";
-                    espnTable.appendChild(row);
-                    return;
-                }
-
-                Object.entries(data).forEach(([playerName, player]) => {
-                    const row = document.createElement("tr");
-                    row.innerHTML = `
-                        <td>${player.position}</td>
-                        <td>
-                            <img class="headshot" src="${player.headshot}" alt="${playerName}"> 
-                            <img class="flag" src="${player.flag}" alt="Flag"> 
-                            ${playerName}
-                        </td>
-                        <td>${player.score}</td>
-                        <td>${player.status}</td>
-                    `;
-                    espnTable.appendChild(row);
-                });
-            })
-            .catch(error => console.error("Error fetching ESPN leaderboard:", error));
-    }
-
-
-    function loadDraftResults(tournament) {
-        fetch(`https://m7486etxhi.execute-api.us-east-1.amazonaws.com/draft/${tournament}`)
-            .then(response => response.json())
-            .then(data => {
-                draftTable.innerHTML = "<tr><th>Player</th></tr>";
-
-                if (Object.keys(data).length === 0) {
-                    const row = document.createElement("tr");
-                    row.innerHTML = "<td colspan='4'>No draft found.</td>";
-                    draftTable.appendChild(row);
-                    return;
-                }
-
-                // Create table header with player names
-                let tableHTML = `
-                    <thead>
-                        <tr>
-                            ${Object.keys(data).map(user => `<th>${user}</th>`).join('')}
-                        </tr>
-                    </thead>
-                    <tbody>
-                `;
-
-                // Get the number of draft picks per player (safe to assume all have same)
-                const numPicks = data[Object.keys(data)[0]].length;
-
-                // Populate the table rows with draft picks
-                for (let i = 0; i < numPicks; i++) {
-                    tableHTML += `<tr>`;
-                    Object.keys(data).forEach(user => {
-                        tableHTML += `<td>${data[user][i]}</td>`;
-                    });
-                    tableHTML += `</tr>`;
-                }
-
-                tableHTML += `</tbody>`;
-                draftTable.innerHTML = tableHTML;
-            })
-            .catch(error => {
-                console.error("Error fetching draft results:", error);
-                draftTable.innerHTML = '<tr><td colspan="100%">Failed to load draft results</td></tr>';
-            });
-    }
-
 
 
     tournamentDropdown.addEventListener("change", () => {
-        golfPicksLeaderboardH1.style.display = "inline-block";
-        draftResultsH1.style.display = "inline-block";
-        espnLeaderboardH1.style.display = "inline-block";
         const selectedTournament = tournamentDropdown.value;
         if (selectedTournament) {
-            loadGolfPicksLeaderboard(selectedTournament);
-            loadESPNLeaderboard(selectedTournament);
-            loadDraftResults(selectedTournament);
+            fetchBackendData(selectedTournament);
         }
     });
 
