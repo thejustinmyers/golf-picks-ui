@@ -26,16 +26,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function renderGolfPicksLeaderboard(data) {
-        const players = data.golfPicksScoreData;
-
         golfPicksLeaderboardTable.innerHTML = "";
 
+        const players = data.golfPicksScoreData;
         if (!players || players.length === 0) {
-            const row = document.createElement("tr");
-            row.innerHTML = "<td colspan='2'>No draft found.</td>";
-            golfPicksLeaderboardTable.appendChild(row);
             return;
         }
+
+        golfPicksLeaderboardH1.style.display = "inline-block";
 
         // Sort by numeric score (ascending)
         const sortedPlayers = [...players].sort((a, b) => parseFloat(a.score) - parseFloat(b.score));
@@ -73,15 +71,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     function renderGolfPicksDataTable(data) {
-        const players = data.golfPicksScoreData;
-
-        // Safety check
-        if (!players || players.length === 0 || !players[0].picks) return;
-
-        const numPicks = players[0].picks.length;
-
-        // Clear existing table
         golfpicksTable.innerHTML = "";
+
+        const players = data.golfPicksScoreData;
+        if (!players || players.length === 0 || !players[0].picks) {
+            return;
+        }
+
+        golfPicksDataH1.style.display = "inline-block";
+        const numPicks = players[0].picks.length;
 
         // Header row 1: Player names
         const headerRow1 = document.createElement("tr");
@@ -137,6 +135,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const leaderboard = data.leaderboard;
         const placeholder = document.getElementById("espn-placeholder");
         placeholder.style.display = "none";
+        espnLeaderboardH1.style.display = "inline-block";
 
         if (!leaderboard || Object.keys(leaderboard).length === 0) {
             espnTable.style.display = "none";
@@ -177,10 +176,9 @@ document.addEventListener("DOMContentLoaded", () => {
         fetch(`http://127.0.0.1:8000/scores/${tournament}`)
             .then(response => response.json())
             .then(data => {
-                golfPicksLeaderboardH1.style.display = "inline-block";
-                golfPicksDataH1.style.display = "inline-block";
-                espnLeaderboardH1.style.display = "inline-block";
-
+                golfPicksLeaderboardH1.style.display = "none";
+                golfPicksDataH1.style.display = "none";
+                espnLeaderboardH1.style.display = "none";
                 renderGolfPicksLeaderboard(data);
                 renderGolfPicksDataTable(data);
                 renderESPNLeaderboard(data);
