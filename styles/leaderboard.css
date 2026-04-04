@@ -59,14 +59,49 @@ body {
     padding: 20px;
 }
 
-/* === Tournament Dropdown === */
-.tournament-selection {
-    margin: 20px 0;
+/* === Controls === */
+.leaderboard-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 20px 0 30px;
+}
+
+button {
+    background: white;
+    color: #006400;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: 2px solid #006400;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 3px 3px 8px white;
+}
+
+button:hover {
+    background-color: #ffcc00;
+    transform: scale(1.05);
+    box-shadow: 3px 3px 12px white;
+}
+
+select {
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #006400;
+    border-radius: 5px;
+    margin: 0;
+}
+
+#season-dropdown {
+    min-width: 100px;
 }
 
 #tournament-dropdown {
-    padding: 10px;
-    font-size: 16px;
+    min-width: 240px;
 }
 
 /* === Section Headings === */
@@ -220,6 +255,22 @@ tr:nth-child(even) {
     .nav-links a {
         font-size: 16px;
         padding: 8px 16px;
+    }
+
+    .leaderboard-controls {
+        gap: 10px;
+    }
+
+    button {
+        font-size: 16px;
+        padding: 8px 16px;
+    }
+
+    #season-dropdown,
+    #tournament-dropdown,
+    #fetchLeaderboard {
+        width: 100%;
+        max-width: 320px;
     }
 
     #golfpicks-table td,

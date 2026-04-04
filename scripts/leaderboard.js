@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const seasonDropdown = document.getElementById("season-dropdown");
     const tournamentDropdown = document.getElementById("tournament-dropdown");
+    const fetchLeaderboardButton = document.getElementById("fetchLeaderboard");
     const golfpicksTable = document.getElementById("golfpicks-table");
     const espnTable = document.getElementById("espn-table");
     const golfPicksDataH1 = document.getElementById("golfpicks-data-h1");
@@ -7,15 +9,35 @@ document.addEventListener("DOMContentLoaded", () => {
     const golfPicksLeaderboardTable = document.getElementById("leaderboard-table");
     const golfPicksLeaderboardH1 = document.getElementById("leaderboard-h1");
 
+    function resetLeaderboardDisplay() {
+        golfPicksLeaderboardH1.style.display = "none";
+        golfPicksDataH1.style.display = "none";
+        espnLeaderboardH1.style.display = "none";
+        golfPicksLeaderboardTable.innerHTML = "";
+        golfpicksTable.innerHTML = "";
+        espnTable.innerHTML = "";
+        espnTable.style.display = "table";
+
+        const placeholder = document.getElementById("espn-placeholder");
+        placeholder.style.display = "none";
+        placeholder.innerHTML = "";
+    }
+
     function loadTournaments() {
         fetch("https://dn5f0z7pjnqc1.cloudfront.net/tournaments")
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch tournaments");
+                }
+
+                return response.json();
+            })
             .then(tournaments => {
                 tournamentDropdown.innerHTML = '<option value="">Select a tournament</option>';
                 tournaments.forEach(tournament => {
                     const option = document.createElement("option");
                     option.value = tournament;
-                    option.textContent = tournament.replace(/-/g, ' ');
+                    option.textContent = tournament.replace(/-/g, " ");
                     tournamentDropdown.appendChild(option);
                 });
             })
@@ -172,19 +194,29 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    function fetchBackendData(tournament) {
-        fetch(`https://dn5f0z7pjnqc1.cloudfront.net/scores/${tournament}`)
-            .then(response => response.json())
+    function fetchBackendData(tournament, season) {
+        const url = new URL(`https://dn5f0z7pjnqc1.cloudfront.net/scores/${tournament}`);
+        if (season) {
+            url.searchParams.set("season", season);
+        }
+
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch leaderboard data");
+                }
+
+                return response.json();
+            })
             .then(data => {
-                golfPicksLeaderboardH1.style.display = "none";
-                golfPicksDataH1.style.display = "none";
-                espnLeaderboardH1.style.display = "none";
+                resetLeaderboardDisplay();
                 renderGolfPicksLeaderboard(data);
                 renderGolfPicksDataTable(data);
                 renderESPNLeaderboard(data);
             })
             .catch(error => {
                 console.error("Error fetching leaderboard data:", error);
+                resetLeaderboardDisplay();
                 golfPicksLeaderboardTable.innerHTML = "<tr><td colspan='9'>Failed to load golf picks leaderboard.</td></tr>";
                 golfpicksTable.innerHTML = "<tr><td colspan='9'>Failed to load golf picks data.</td></tr>";
                 espnTable.innerHTML = "<tr><td colspan='4'>Failed to load ESPN leaderboard data.</td></tr>";
@@ -192,12 +224,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    tournamentDropdown.addEventListener("change", () => {
+    fetchLeaderboardButton.addEventListener("click", () => {
         const selectedTournament = tournamentDropdown.value;
+        const selectedSeason = seasonDropdown.value;
+
         if (selectedTournament) {
-            fetchBackendData(selectedTournament);
+            fetchBackendData(selectedTournament, selectedSeason);
+            return;
         }
+
+        alert("Please select a tournament.");
     });
 
+    seasonDropdown.addEventListener("change", () => {
+        resetLeaderboardDisplay();
+    });
+
+    resetLeaderboardDisplay();
     loadTournaments();
 });
