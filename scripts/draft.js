@@ -187,7 +187,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Send draft data to API
         try {
-            const response = await fetch(`http://0.0.0.0:8000/draft/${tournamentName}`, {
+            const response = await fetch(`https://dn5f0z7pjnqc1.cloudfront.net/draft/${tournamentName}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(draftData),
