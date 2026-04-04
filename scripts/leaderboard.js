@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const golfPicksLeaderboardH1 = document.getElementById("leaderboard-h1");
 
     function loadTournaments() {
-        fetch("https://m7486etxhi.execute-api.us-east-1.amazonaws.com/tournaments")
+        fetch("https://dn5f0z7pjnqc1.cloudfront.net/tournaments")
             .then(response => response.json())
             .then(tournaments => {
                 tournamentDropdown.innerHTML = '<option value="">Select a tournament</option>';
@@ -173,7 +173,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function fetchBackendData(tournament) {
-        fetch(`https://m7486etxhi.execute-api.us-east-1.amazonaws.com/scores/${tournament}`)
+        fetch(`https://dn5f0z7pjnqc1.cloudfront.net/scores/${tournament}`)
             .then(response => response.json())
             .then(data => {
                 golfPicksLeaderboardH1.style.display = "none";

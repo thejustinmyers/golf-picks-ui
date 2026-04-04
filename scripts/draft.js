@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Fetch available tournaments and populate dropdown
     async function fetchTournaments() {
         try {
-            const response = await fetch("https://m7486etxhi.execute-api.us-east-1.amazonaws.com/tournaments");
+            const response = await fetch("https://dn5f0z7pjnqc1.cloudfront.net/tournaments");
             if (!response.ok) throw new Error("Failed to fetch tournaments");
             const data = await response.json();
 
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!tournament) return alert("Please select a tournament.");
 
         try {
-            const response = await fetch(`https://m7486etxhi.execute-api.us-east-1.amazonaws.com/odds/${tournament}`);
+            const response = await fetch(`https://dn5f0z7pjnqc1.cloudfront.net/odds/${tournament}`);
             if (!response.ok) throw new Error("Failed to fetch odds");
 
             const data = await response.json();
