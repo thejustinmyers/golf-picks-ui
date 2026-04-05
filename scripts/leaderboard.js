@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 tournaments.forEach(tournament => {
                     const option = document.createElement("option");
                     option.value = tournament;
-                    option.textContent = tournament.replace(/-/g, " ");
+                    option.textContent = tournament.replace(/-/g, " ").toUpperCase();
                     tournamentDropdown.appendChild(option);
                 });
             })
