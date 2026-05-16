@@ -12,15 +12,24 @@ document.addEventListener("DOMContentLoaded", function () {
     let draftCells = [];
     playersTableBody.style.pointerEvents = "none";
 
+    function normalizeTournamentsResponse(data) {
+        if (Array.isArray(data)) {
+            return data;
+        }
+
+        return Array.isArray(data?.tournaments) ? data.tournaments : [];
+    }
+
     // Fetch available tournaments and populate dropdown
     async function fetchTournaments() {
         try {
             const response = await fetch("https://dn5f0z7pjnqc1.cloudfront.net/tournaments");
             if (!response.ok) throw new Error("Failed to fetch tournaments");
             const data = await response.json();
+            const tournaments = normalizeTournamentsResponse(data);
 
             const fragment = document.createDocumentFragment();
-            data.forEach(tournament => {
+            tournaments.forEach(tournament => {
                 const option = document.createElement("option");
                 option.value = tournament;
                 option.textContent = tournament.replace(/-/g, " ").toUpperCase();
