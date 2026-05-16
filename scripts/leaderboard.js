@@ -9,6 +9,47 @@ document.addEventListener("DOMContentLoaded", () => {
     const golfPicksLeaderboardTable = document.getElementById("leaderboard-table");
     const golfPicksLeaderboardH1 = document.getElementById("leaderboard-h1");
 
+    function formatTournamentName(tournament) {
+        return tournament.replace(/-/g, " ").toUpperCase();
+    }
+
+    function normalizeTournamentsResponse(data) {
+        if (Array.isArray(data)) {
+            return {
+                tournaments: data,
+                activeTournament: null,
+                activeTournamentData: null,
+            };
+        }
+
+        const tournaments = Array.isArray(data?.tournaments) ? data.tournaments : [];
+        const activeTournament = typeof data?.active === "string" ? data.active : null;
+
+        let activeTournamentData = null;
+        if (activeTournament && data?.[activeTournament] && typeof data[activeTournament] === "object") {
+            activeTournamentData = data[activeTournament];
+        } else if (data?.leaderboard && typeof data.leaderboard === "object") {
+            activeTournamentData = data.leaderboard;
+        }
+
+        return {
+            tournaments,
+            activeTournament,
+            activeTournamentData,
+        };
+    }
+
+    function populateTournamentDropdown(tournaments) {
+        tournamentDropdown.innerHTML = '<option value="">Select a tournament</option>';
+
+        tournaments.forEach(tournament => {
+            const option = document.createElement("option");
+            option.value = tournament;
+            option.textContent = formatTournamentName(tournament);
+            tournamentDropdown.appendChild(option);
+        });
+    }
+
     function resetLeaderboardDisplay() {
         golfPicksLeaderboardH1.style.display = "none";
         golfPicksDataH1.style.display = "none";
@@ -32,14 +73,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 return response.json();
             })
-            .then(tournaments => {
-                tournamentDropdown.innerHTML = '<option value="">Select a tournament</option>';
-                tournaments.forEach(tournament => {
-                    const option = document.createElement("option");
-                    option.value = tournament;
-                    option.textContent = tournament.replace(/-/g, " ").toUpperCase();
-                    tournamentDropdown.appendChild(option);
-                });
+            .then(data => {
+                const {
+                    tournaments,
+                    activeTournament,
+                    activeTournamentData,
+                } = normalizeTournamentsResponse(data);
+
+                populateTournamentDropdown(tournaments);
+
+                if (!activeTournament) {
+                    return;
+                }
+
+                tournamentDropdown.value = activeTournament;
+
+                if (activeTournamentData) {
+                    resetLeaderboardDisplay();
+                    renderGolfPicksLeaderboard(activeTournamentData);
+                    renderGolfPicksDataTable(activeTournamentData);
+                    renderESPNLeaderboard(activeTournamentData);
+                    return;
+                }
+
+                fetchBackendData(activeTournament, seasonDropdown.value);
             })
             .catch(error => {
                 console.error("Error fetching tournaments:", error);
